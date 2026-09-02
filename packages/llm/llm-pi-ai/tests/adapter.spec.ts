@@ -9,7 +9,7 @@ import type {
   SaveImageAttachment,
   StoredImageAttachment,
 } from '@deepseek-ai/dsh-attachment'
-import LlmRuntime, { createUserMessage, CONTEXT_WINDOW_EXCEEDED_CODE, LlmError, ReasoningEffortId, userAgent } from '@deepseek-ai/dsh-llm'
+import LlmRuntime, { createMessage, createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, LlmError, ReasoningEffortId, userAgent } from '@deepseek-ai/dsh-llm'
 import * as LlmPiAi from '@deepseek-ai/dsh-llm-pi-ai'
 import { PiAiAdapter } from '@deepseek-ai/dsh-llm-pi-ai'
 import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
@@ -87,6 +87,35 @@ describe('PiAiAdapter provider routing', () => {
     expect(result.finish).toEqual({ kind: 'stop' })
     expect(result.usage).toEqual({ inputTokens: 3, outputTokens: 1, totalTokens: 4 })
     expect(server.paths).toEqual(['/chat/completions'])
+  })
+
+  it('sends a tool-only assistant turn as content "" rather than null', async () => {
+    const server = await mockServer([{ events: textEvents }])
+    const ctx = await harness(server.url)
+    const callId = ToolCallId('call-1')
+    const result = await assemble(ctx, {
+      model: 'deepseek-v4-flash',
+      tools: [{ name: 'echo', description: 'echo text', parameters: { type: 'object' } }],
+      messages: [
+        createUserMessage({
+          content: [{ type: 'text', text: 'run the tool' }],
+          source: { kind: 'plugin', plugin: 'test' },
+        }),
+        createMessage({
+          role: 'assistant',
+          content: [{ type: 'tool-call', id: callId, name: 'echo', arguments: '{"text":"hi"}' }],
+          source: { kind: 'plugin', plugin: 'test' },
+        }),
+        createUserMessage({
+          content: [{ type: 'tool-result', toolCallId: callId, content: [{ type: 'text', text: 'hi' }] }],
+          source: { kind: 'plugin', plugin: 'test' },
+        }),
+      ],
+    })
+    expect(result.finish).toEqual({ kind: 'stop' })
+    const assistant = (server.requests[0] as { messages: Array<{ role: string; content: unknown }> })
+      .messages.find(message => message.role === 'assistant')
+    expect(assistant?.content).toBe('')
   })
 
   it('keeps prepared model metadata and dispatch on one profile snapshot', async () => {

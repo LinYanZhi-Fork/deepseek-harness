@@ -132,6 +132,26 @@ function profileOptions(
 }
 
 /**
+ * Replace `content: null` with an empty string on assistant messages that
+ * carry `tool_calls`. pi-ai emits `content: null` for a tool-only assistant
+ * turn; strict OpenAI-compatible gateways reject that wire value with 422.
+ * `buildParams` produces a request-local payload, so in-place mutation is
+ * safe; returning `undefined` keeps it as the request body.
+ */
+function replaceNullAssistantContent(payload: unknown, _model: Model<Api>): undefined {
+  const messages = (payload as { messages?: unknown }).messages
+  if (!Array.isArray(messages)) return undefined
+  for (const message of messages) {
+    if (message === null || typeof message !== 'object') continue
+    const assistant = message as { role?: unknown; content?: unknown; tool_calls?: unknown }
+    if (assistant.role !== 'assistant' || assistant.content !== null) continue
+    if (assistant.tool_calls === undefined) continue
+    assistant.content = ''
+  }
+  return undefined
+}
+
+/**
  * The profile default this exact model can actually take, for DESCRIBING it.
  * A configured level the model does not support yields none rather than
  * throwing: `resolveModel` builds the model catalog, and a catalog that fails
@@ -381,6 +401,10 @@ export class PiAiAdapter extends LlmAdapter {
         // Profile headers are deployment-owned; attribution names are
         // Harness-owned and therefore win collisions.
         headers: requestHeaders(profile.headers),
+        // pi-ai serializes an assistant turn that only requested tools with
+        // `content: null`, which strict OpenAI-compatible gateways reject
+        // with 422; send an empty string instead.
+        onPayload: replaceNullAssistantContent,
       })
       const iterator = toStreamChunks(events, model.contextWindow, options.signal)[Symbol.asyncIterator]()
       let exhausted = false
