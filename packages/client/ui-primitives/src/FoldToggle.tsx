@@ -1,3 +1,5 @@
+import type { JSX } from 'react'
+
 interface FoldToggleProps {
   className: string | undefined
   expanded: boolean
@@ -18,7 +20,7 @@ interface FoldToggleProps {
  */
 export function FoldToggle({
   className, expanded, hidden, labels, onToggle,
-}: FoldToggleProps) {
+}: FoldToggleProps): JSX.Element {
   return (
     <button
       type="button"

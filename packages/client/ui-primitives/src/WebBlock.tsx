@@ -2,6 +2,8 @@ import clsx from 'clsx'
 import { MarkdownText, type MarkdownLabels } from './markdown/MarkdownText.tsx'
 import css from './WebBlock.module.css'
 
+import type { JSX } from 'react'
+
 /**
  * One citeable source drawn in a search card: the projection of the contract's
  * `WebSource`, with the optional fields kept optional so a provider that
@@ -189,6 +191,6 @@ function WebFetchBlock({ url, statusCode, truncated, labels, className }: WebFet
  * @param props - see {@link WebBlockProps}; `kind` selects the search or fetch body.
  * @returns the web card element.
  */
-export function WebBlock(props: WebBlockProps) {
+export function WebBlock(props: WebBlockProps): JSX.Element {
   return props.kind === 'search' ? <WebSearchBlock {...props} /> : <WebFetchBlock {...props} />
 }

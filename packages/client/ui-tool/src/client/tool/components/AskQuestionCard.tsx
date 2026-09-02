@@ -3,12 +3,14 @@
 import type { AskQuestionCardModel } from '../models/ask-question-card-model.ts'
 import css from './AskQuestionCard.module.css'
 
+import type { JSX } from 'react'
+
 /**
  * Render a validated ask-user transcript from plain card data.
  * @param props - Localized transcript card data.
  * @returns the readable answered or unanswered question list.
  */
-export function AskQuestionCard({ card }: { card: AskQuestionCardModel }) {
+export function AskQuestionCard({ card }: { card: AskQuestionCardModel }): JSX.Element {
   if (card.kind === 'unanswered') {
     return (
       <div className={css.card}>

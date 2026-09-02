@@ -22,12 +22,14 @@ import { imageCardModel } from '../models/image-card-model.ts'
 import { readFamilyRow, type ReadImageRowProps } from './read-family-row.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
 
+import type { ReactNode } from 'react'
+
 /**
  * read_image row: the read-family chrome with the durably committed image as the
  * row's collapsed-by-default card body, rendered through the `tool.call.images`
  * slot this entry declares.
  */
-export function ReadImageRow(props: ReadImageRowProps) {
+export function ReadImageRow(props: ReadImageRowProps): ReactNode {
   const { block, cwd, home, renderSlot, loadImage } = props
   return readFamilyRow(props, {
     image: imageCardModel(block, cwd, home),

@@ -2,6 +2,8 @@
 
 import css from './TrajectoryGroupHeader.module.css'
 
+import type { JSX } from 'react'
+
 export interface TrajectoryGroupHeaderProps {
   /** Group title (`Message`, `Step 1`, …). */
   title: string
@@ -14,7 +16,7 @@ export interface TrajectoryGroupHeaderProps {
  * @param props - title and optional description.
  * @returns the group header element.
  */
-export function TrajectoryGroupHeader({ title, description }: TrajectoryGroupHeaderProps) {
+export function TrajectoryGroupHeader({ title, description }: TrajectoryGroupHeaderProps): JSX.Element {
   return (
     <div className={css.root}>
       <span className={css.title}>{title}</span>

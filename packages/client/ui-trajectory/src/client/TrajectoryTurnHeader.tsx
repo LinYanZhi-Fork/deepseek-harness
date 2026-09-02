@@ -3,6 +3,8 @@
 import css from './TrajectoryTurnHeader.module.css'
 import type { TrajectoryKey, TrajectoryTranslate } from './locales.ts'
 
+import type { JSX } from 'react'
+
 const COLUMN_LABEL_KEYS: readonly TrajectoryKey[] = [
   'column.input', 'column.output', 'column.think', 'column.time',
 ]
@@ -19,7 +21,7 @@ export interface TrajectoryTurnHeaderProps {
  * @param props.turn - turn index.
  * @returns the sticky header element.
  */
-export function TrajectoryTurnHeader({ turn, t }: TrajectoryTurnHeaderProps) {
+export function TrajectoryTurnHeader({ turn, t }: TrajectoryTurnHeaderProps): JSX.Element {
   return (
     <div className={css.root}>
       <div className={css.inner}>

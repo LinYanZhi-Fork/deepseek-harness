@@ -16,6 +16,8 @@ import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type { createAppearanceRowStore } from './settings-store.ts'
 import css from './AppearanceRow.module.css'
 
+import type { JSX } from 'react'
+
 /** Injected business face: the preference write (t rides the standard locale seat). */
 export interface AppearanceRowInjected {
   /** Switch the theme preference. */
@@ -39,7 +41,7 @@ const CUBES: readonly { id: ThemePreference; labelKey: ThemeKey; Icon: typeof Ic
  * @param props - composed slot props.
  * @returns the row element tree.
  */
-export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentProps) {
+export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentProps): JSX.Element {
   const preference = useStore(s => s.preference)
   return (
     <div className={css.group}>

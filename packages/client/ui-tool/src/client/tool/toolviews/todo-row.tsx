@@ -7,6 +7,8 @@ import { ToolRow } from '../components/ToolRow.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
 import { planSummary, type PlanItemLike } from './plan-summary.ts'
 
+import type { JSX } from 'react'
+
 type TodoRowProps = ToolCallViewProps & PropsLocale<'conversation'>
 
 function isItem(value: unknown): value is PlanItemLike {
@@ -45,7 +47,7 @@ function summarize(argsRaw: string, t: TodoRowProps['t']): RowSummary | null {
 }
 
 /** Summarizes a plan update without presenting a cancelled call as completed. */
-export function TodoRow({ toolName, block, inspect, t }: TodoRowProps) {
+export function TodoRow({ toolName, block, inspect, t }: TodoRowProps): JSX.Element {
   const model = toolRowModel(toolName, block)
   const argsRaw = ('kind' in block ? block.call?.argsRaw : block.argsRaw) ?? ''
   const summary = summarize(argsRaw, t) ?? { text: model.summary, extra: 0 }

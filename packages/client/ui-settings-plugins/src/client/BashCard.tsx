@@ -6,6 +6,8 @@ import { PluginCard } from './PluginCard.tsx'
 import type { BashCardFace } from './bash-card-controller.ts'
 import type {} from './slot-contract.ts'
 
+import type { JSX } from 'react'
+
 /** Props the renderer binds for the shell card. */
 export type BashCardProps =
   PropsRuntime<'settings.plugin.item'>
@@ -17,7 +19,7 @@ export type BashCardProps =
  * @param props - locale copy, the card snapshot, and its form actions.
  * @returns the card.
  */
-export function BashCard(props: BashCardProps) {
+export function BashCard(props: BashCardProps): JSX.Element {
   const { t } = props
   const state = props.useBashCard(snapshot => snapshot)
   const disabled = !state.writable

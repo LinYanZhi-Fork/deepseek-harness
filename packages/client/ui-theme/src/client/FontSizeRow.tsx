@@ -16,6 +16,8 @@ import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type { createFontSizeRowStore } from './settings-store.ts'
 import css from './FontSizeRow.module.css'
 
+import type { JSX } from 'react'
+
 /** Injected business face: the preference write (t rides the standard locale seat). */
 export interface FontSizeRowInjected {
   /** Change the content font size (integer px within FONT_SIZE_MIN..FONT_SIZE_MAX). */
@@ -32,7 +34,7 @@ export type FontSizeRowComponentProps =
  * @param props - composed slot props.
  * @returns the row element tree.
  */
-export function FontSizeRow({ t, setFontSize, useStore }: FontSizeRowComponentProps) {
+export function FontSizeRow({ t, setFontSize, useStore }: FontSizeRowComponentProps): JSX.Element {
   const fontSize = useStore(s => s.fontSize)
   return (
     <div className={css.row}>

@@ -2,6 +2,8 @@ import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots
 import { NS } from './locales.ts'
 import css from './SubagentReadOnlyComposer.module.css'
 
+import type { JSX } from 'react'
+
 /** Why a catalog-addressed conversation cannot accept human input. */
 export interface SubagentReadOnlyMatch {
   reason: 'one-shot' | 'parent-unavailable'
@@ -18,7 +20,7 @@ export type SubagentReadOnlyComposerProps =
  */
 export function SubagentReadOnlyComposer({
   matched, t,
-}: Pick<SubagentReadOnlyComposerProps, 'matched' | 't'>) {
+}: Pick<SubagentReadOnlyComposerProps, 'matched' | 't'>): JSX.Element {
   const oneShot = matched.reason === 'one-shot'
   return (
     <div className={css.frame} role="status">

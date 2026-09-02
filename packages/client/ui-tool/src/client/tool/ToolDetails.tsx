@@ -14,6 +14,8 @@ import { resultText } from './models/tool-call-model.ts'
 import { webCardModel } from './models/web-card-model.ts'
 import css from './ToolDetails.module.css'
 
+import type { JSX } from 'react'
+
 /**
  * Render the selected Tool call's structured output when its raw fields form a
  * supported root card, otherwise preserve the flattened result text.
@@ -22,7 +24,7 @@ import css from './ToolDetails.module.css'
  */
 export function ToolDetails({
   block, cwd, useHostInfo, t,
-}: Pick<ToolDetailsProps, 'block' | 'cwd' | 'useHostInfo' | 't'>) {
+}: Pick<ToolDetailsProps, 'block' | 'cwd' | 'useHostInfo' | 't'>): JSX.Element {
   const home = useHostInfo(info => info.home)
   const terminalModel = terminalCardModel(block, cwd)
   if (terminalModel !== null) {
