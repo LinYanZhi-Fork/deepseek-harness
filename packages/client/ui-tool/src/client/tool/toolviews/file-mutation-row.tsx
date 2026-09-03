@@ -7,12 +7,14 @@ import { toolRowModel } from '../models/tool-call-model.ts'
 import { ToolRow } from '../components/ToolRow.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
 
+import type { JSX } from 'react'
+
 type FileMutationRowProps = ToolCallViewProps & PropsLocale<'conversation'>
 
 /**
  * Lets users expand an applied file diff and open the reported path.
  */
-export function FileMutationRow({ toolName, block, cwd, home, openFile, inspect, t }: FileMutationRowProps) {
+export function FileMutationRow({ toolName, block, cwd, home, openFile, inspect, t }: FileMutationRowProps): JSX.Element {
   const model = toolRowModel(toolName, block, cwd, home)
   const diff = diffCardModel(block)
   return (

@@ -6,6 +6,8 @@ import { PluginCard } from './PluginCard.tsx'
 import type { AgentLoopCardFace } from './agent-loop-card-controller.ts'
 import type {} from './slot-contract.ts'
 
+import type { JSX } from 'react'
+
 /** Props the renderer binds for the agent-loop card. */
 export type AgentLoopCardProps =
   PropsRuntime<'settings.plugin.item'>
@@ -17,7 +19,7 @@ export type AgentLoopCardProps =
  * @param props - locale copy, the card snapshot, and its form actions.
  * @returns the card.
  */
-export function AgentLoopCard(props: AgentLoopCardProps) {
+export function AgentLoopCard(props: AgentLoopCardProps): JSX.Element {
   const { t } = props
   const state = props.useAgentLoopCard(snapshot => snapshot)
   return (

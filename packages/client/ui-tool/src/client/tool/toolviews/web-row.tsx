@@ -7,6 +7,8 @@ import { toolRowModel } from '../models/tool-call-model.ts'
 import { ToolRow } from '../components/ToolRow.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
 
+import type { JSX } from 'react'
+
 type WebRowProps = ToolCallViewProps & PropsLocale<'conversation'>
 
 const WEB_TITLE_KEYS = {
@@ -15,7 +17,7 @@ const WEB_TITLE_KEYS = {
 } as const
 
 /** Lets users expand a completed web search or fetch result. */
-export function WebRow({ toolName, block, inspect, t }: WebRowProps) {
+export function WebRow({ toolName, block, inspect, t }: WebRowProps): JSX.Element {
   const model = toolRowModel(toolName, block)
   const web = webCardModel(block)
   const icon = toolName === 'web_fetch' ? <IconBrowseOutline16 size={14} /> : <IconGlobeOutline14 size={14} />

@@ -10,6 +10,8 @@ import type {} from './slot-contract.ts'
 import { PluginCard } from './PluginCard.tsx'
 import css from './SubagentModelSelectionCard.module.css'
 
+import type { JSX } from 'react'
+
 /** Props the renderer binds for the subagent model-selection card. */
 export type SubagentModelSelectionCardProps =
   PropsRuntime<'settings.plugin.item'>
@@ -21,7 +23,7 @@ export type SubagentModelSelectionCardProps =
  * @param props - locale copy, the card snapshot, and its toggle action.
  * @returns the preference card, or nothing when the namespace is unavailable.
  */
-export function SubagentModelSelectionCard(props: SubagentModelSelectionCardProps) {
+export function SubagentModelSelectionCard(props: SubagentModelSelectionCardProps): JSX.Element {
   const { t } = props
   const state = props.useSubagentModelSelectionCard(snapshot => snapshot)
   const availableGroups = new Map<string, {

@@ -5,6 +5,8 @@ import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-cli
 import type { SessionLogDownloadState } from './controller.ts'
 import { NS } from './locales.ts'
 
+import type { JSX } from 'react'
+
 /** Browser operations and state injected into the Session Header contribution. */
 export interface SessionLogDownloadDialogInjected {
   hooks: { sessionLogDownload: ObservableSnapshot<SessionLogDownloadState> }
@@ -24,7 +26,7 @@ export type SessionLogDownloadDialogProps =
  */
 export function SessionLogDownloadDialog({
   sessionId, useSessionLogDownload, dismiss, t,
-}: SessionLogDownloadDialogProps) {
+}: SessionLogDownloadDialogProps): JSX.Element {
   const entry = useSessionLogDownload(state => state.bySession[String(sessionId)])
 
   const status = entry?.status

@@ -7,6 +7,8 @@ import { toolRowModel } from '../models/tool-call-model.ts'
 import { ToolRow } from '../components/ToolRow.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
 
+import type { JSX } from 'react'
+
 type SearchRowProps = ToolCallViewProps & PropsLocale<'conversation'>
 
 const SEARCH_TITLE_KEYS = {
@@ -15,7 +17,7 @@ const SEARCH_TITLE_KEYS = {
 } as const
 
 /** Lets users expand grep or glob results and recover capped searches. */
-export function SearchRow({ toolName, block, inspect, t }: SearchRowProps) {
+export function SearchRow({ toolName, block, inspect, t }: SearchRowProps): JSX.Element {
   const model = toolRowModel(toolName, block)
   const search = searchCardModel(block)
   return (

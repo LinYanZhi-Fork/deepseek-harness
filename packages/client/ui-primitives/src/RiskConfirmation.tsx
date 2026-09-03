@@ -7,6 +7,8 @@ import { IconWarningOutline16 } from './icons/index.tsx'
 import { Modal } from './Modal.tsx'
 import css from './RiskConfirmation.module.css'
 
+import type { JSX } from 'react'
+
 export interface RiskConfirmationProps {
   open: boolean
   title: string
@@ -39,7 +41,7 @@ export function RiskConfirmation({
   onAcknowledgedChange,
   onCancel,
   onConfirm,
-}: RiskConfirmationProps) {
+}: RiskConfirmationProps): JSX.Element {
   return (
     <Modal
       open={open}

@@ -5,6 +5,8 @@ import { IconSearchOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { NS } from './locales.ts'
 import css from './TrajectoryToolbar.module.css'
 
+import type { JSX } from 'react'
+
 export interface TrajectoryToolbarProps {
   /** Whether timeline blocks use recorded durations instead of equal widths. */
   actualDuration: boolean
@@ -47,7 +49,7 @@ export function TrajectoryToolbar({
   searchQuery,
   onSearchQueryChange,
   t,
-}: TrajectoryToolbarProps) {
+}: TrajectoryToolbarProps): JSX.Element {
   return (
     <div className={css.root} role="toolbar" aria-label={t('toolbar.aria')}>
       <div className={css.inner}>

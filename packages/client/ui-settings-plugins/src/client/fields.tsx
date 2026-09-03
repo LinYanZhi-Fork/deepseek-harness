@@ -8,6 +8,8 @@
 
 import css from './fields.module.css'
 
+import type { JSX } from 'react'
+
 /** What every field control needs regardless of its value type. */
 export interface FieldProps {
   /** Stable id associating the label with its control. */
@@ -48,7 +50,7 @@ export function ValueField(props: FieldProps & {
   numeric?: boolean
   /** Placeholder shown while the draft is empty. */
   placeholder?: string
-}) {
+}): JSX.Element {
   return (
     <div className={css.field}>
       <div className={css.head}>

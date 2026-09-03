@@ -1,6 +1,8 @@
 import { IconCheckOutline16, IconWarningOutline16 } from './icons/index.tsx'
 import css from './ConnectionIndicator.module.css'
 
+import type { JSX } from 'react'
+
 /** Visual state rendered by {@link ConnectionIndicator}. */
 export type ConnectionIndicatorState =
   | 'disconnected'
@@ -37,7 +39,7 @@ export function ConnectionIndicator({
   reconnectActionLabel: string
   restartActionLabel: string
   onReconnect: () => void
-}) {
+}): JSX.Element | null {
   if (state === undefined) return null
   const sizeLabels = (
     <>

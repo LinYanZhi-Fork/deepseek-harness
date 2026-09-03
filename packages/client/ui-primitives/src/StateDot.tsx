@@ -1,6 +1,8 @@
 import clsx from 'clsx'
 import css from './StateDot.module.css'
 
+import type { JSX } from 'react'
+
 /** Four-color state semantic (green done / amber user-attention / blue running ring / red error). */
 export type StateDotState = 'done' | 'warning' | 'ongoing' | 'error'
 
@@ -20,7 +22,7 @@ export function StateDot({ state, size = 10, className }: {
   state: StateDotState
   size?: number | undefined
   className?: string | undefined
-}) {
+}): JSX.Element {
   if (state === 'ongoing') {
     return (
       <svg

@@ -5,12 +5,14 @@ import type { ChatViewSlotProps, CommandRowOwnerProps } from '../contract/slots.
 import { CompactionItem } from './CompactionItem.tsx'
 import { GenericCommandCard } from './GenericCommandCard.tsx'
 
+import type { JSX } from 'react'
+
 interface CompactionCommandCardProps extends CommandRowOwnerProps {
   t: ChatViewSlotProps['t']
 }
 
 /** Render one manual compaction lifecycle without duplicating its checkpoint marker. */
-export function CompactionCommandCard({ node, compaction, t }: CompactionCommandCardProps) {
+export function CompactionCommandCard({ node, compaction, t }: CompactionCommandCardProps): JSX.Element {
   if (compaction !== undefined) {
     return (
       <CompactionItem

@@ -15,6 +15,8 @@ export type {
   TrajectoryCellProps,
 } from './trajectory-record.ts'
 
+import type { JSX } from 'react'
+
 /** Display label per kind (matches the design tags). */
 const KIND_LABEL_KEY: Record<TrajectoryCellKind, TrajectoryKey> = {
   system: 'kind.system',
@@ -66,7 +68,7 @@ export function TrajectoryCell({
   selected = false,
   className,
   ...rest
-}: TrajectoryCellProps & { t: TrajectoryTranslate }) {
+}: TrajectoryCellProps & { t: TrajectoryTranslate }): JSX.Element {
   const rootClass = [
     css.root,
     selected ? css.selected : undefined,
