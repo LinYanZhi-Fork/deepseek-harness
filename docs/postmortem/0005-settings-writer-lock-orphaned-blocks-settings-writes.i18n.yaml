@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/postmortem/0005-settings-writer-lock-orphaned-blocks-settings-writes.md
+0005-settings-writer-lock-orphaned-blocks-settings-writes.md: 239dbaa43d63e33e328affde8971a322097a4caf
+0005-settings-writer-lock-orphaned-blocks-settings-writes.zh.md: 2940a46b9ddb7cc4c0ce37778d70919628c69509
