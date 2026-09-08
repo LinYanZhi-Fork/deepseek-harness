@@ -59,6 +59,9 @@ function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose, setSecti
   // Transient HTML5 drag state; the drop commits the full visible order once.
   const [dragId, setDragId] = useState<string | null>(null)
   const [overHalf, setOverHalf] = useState<{ id: string; half: 'before' | 'after' } | null>(null)
+  // Guards against double-commit: dragEnd falls back to the last hovered
+  // position only when no drop already committed the reorder.
+  const dropCommitted = useRef(false)
   const endDrag = () => {
     setDragId(null)
     setOverHalf(null)
@@ -115,9 +118,20 @@ function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose, setSecti
                   onDragStart={(e) => {
                     e.dataTransfer.effectAllowed = 'move'
                     e.dataTransfer.setData('text/plain', row.id)
+                    dropCommitted.current = false
                     setDragId(row.id)
                   }}
-                  onDragEnd={endDrag}
+                  onDragEnd={() => {
+                    if (dragId === null) return
+                    // Drop events are not guaranteed — releasing outside a row
+                    // suppresses them, and a fast drop can land before React
+                    // commits the hover state — so the last hovered position
+                    // commits as the fallback, matching the workspace reorder.
+                    if (!dropCommitted.current && overHalf !== null) {
+                      commitDrop(dragId, overHalf.id, overHalf.half)
+                    }
+                    endDrag()
+                  }}
                   onDragOver={(e) => {
                     if (dragId === null || dragId === row.id) return
                     e.preventDefault()
@@ -129,9 +143,12 @@ function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose, setSecti
                       previous?.id === row.id && previous.half === half ? previous : { id: row.id, half })
                   }}
                   onDrop={(e) => {
-                    if (dragId === null || dragId === row.id || overHalf?.id !== row.id) return
+                    if (dragId === null || dragId === row.id) return
                     e.preventDefault()
-                    commitDrop(dragId, row.id, overHalf.half)
+                    // The drop event itself carries the target row and pointer
+                    // half, so a fast drop never reads a stale hover state.
+                    dropCommitted.current = true
+                    commitDrop(dragId, row.id, rowHalf(e))
                     endDrag()
                   }}
                 >

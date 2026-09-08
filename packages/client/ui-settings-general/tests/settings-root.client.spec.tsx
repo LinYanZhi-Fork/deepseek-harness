@@ -440,4 +440,69 @@ describe('SettingsPanel nav reorder', () => {
     fireEvent.dragEnd(general)
     expect(models.className).not.toMatch(/dropBefore|dropAfter/)
   })
+
+  it('commits a fast drop from the drop event without a preceding hover commit', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    stubRect(models, 100)
+    // No dragover at all: the drop event itself carries the target and half,
+    // so the reorder never depends on React having committed hover state.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'drop', 130)
+    expect(setSectionOrder).toHaveBeenCalledWith(['models', 'general', 'agent-presets'])
+  })
+
+  it('drops relative to the row the drop event lands on, not the last hovered row', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    const presets = screen.getByRole('button', { name: 'Agent presets' })
+    stubRect(models, 100)
+    stubRect(presets, 100)
+    // Hover Models first (stale marker), then release over Agent presets:
+    // the commit must target the drop row, like a pointer that flicks past
+    // one row before the hover commit lands.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 130)
+    fireDrag(presets, 'drop', 130)
+    expect(setSectionOrder).toHaveBeenCalledWith(['models', 'agent-presets', 'general'])
+  })
+
+  it('commits the last hovered position on dragEnd when no drop event fires', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    stubRect(models, 100)
+    // Released outside any row (or the browser suppressed the drop): the
+    // dragEnd fallback still commits the row the pointer last hovered.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 130)
+    fireEvent.dragEnd(general)
+    expect(setSectionOrder).toHaveBeenCalledWith(['models', 'general', 'agent-presets'])
+  })
+
+  it('never double-commits a drop on dragEnd, and dragEnd without a hover commits nothing', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    stubRect(models, 100)
+    // Drop commits, then dragEnd must not re-commit the same reorder.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 130)
+    fireDrag(models, 'drop', 130)
+    fireEvent.dragEnd(general)
+    expect(setSectionOrder).toHaveBeenCalledTimes(1)
+    expect(setSectionOrder).toHaveBeenCalledWith(['models', 'general', 'agent-presets'])
+    // A drag that never hovered a row has nothing to commit.
+    fireEvent.dragStart(models, { dataTransfer })
+    fireEvent.dragEnd(models)
+    // A stray dragEnd without a drag start clears nothing and writes nothing.
+    fireEvent.dragEnd(general)
+    expect(setSectionOrder).toHaveBeenCalledTimes(1)
+  })
 })
