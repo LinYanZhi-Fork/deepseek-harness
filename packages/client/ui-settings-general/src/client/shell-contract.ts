@@ -37,6 +37,12 @@ export interface SettingsOnboardingStep {
 export type SettingsRootInjected = {
   /** Request a fresh logical generation and physical WebSocket immediately. */
   reconnect: () => void
+  /**
+   * Persist the full current section order as the user's nav preference. The
+   * caller supplies every visible row id in its rendered order; sections that
+   * disappear from the ledger keep no stale slot.
+   */
+  setSectionOrder: (ids: readonly string[]) => void
   hooks: {
     /** Connection-owned state for the current Host connection. */
     connectionState: HostObservable<ConnectionState | undefined>

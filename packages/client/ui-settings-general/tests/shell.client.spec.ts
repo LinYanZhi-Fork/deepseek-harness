@@ -7,8 +7,12 @@ import { apply as settingsApply, inject as settingsInject } from '@deepseek-ai/d
 import { apply, inject } from '../src/client/index.ts'
 import type { SettingsRootInjected } from '../src/client/shell-contract.ts'
 import { SettingsRoot } from '../src/client/SettingsRoot.tsx'
+import {
+  NAV_ORDER_FIELD, NAV_ORDER_SETTINGS_NAMESPACE, SettingsNavOrderSchema,
+} from '../src/nav-settings.ts'
 
-async function bench() {
+async function bench(options: { isLoopback?: boolean; navOrder?: string[] } = {}) {
+  const { isLoopback = false, navOrder } = options
   const ctx = new Context()
   await ctx.plugin(SlotRegistry).await()
   // Copy machinery the shell only reads a revision from; the real locale
@@ -20,10 +24,31 @@ async function bench() {
     subscribe: () => () => {},
   } as never)
   // The shell mounts ui-settings, which injects `remote.settings`; without the
-  // namespace provided its fiber parks and no slot is ever declared.
-  const settings = {
-    describe: async () => ({ ok: false, error: new RemoteError('gateway/internal', 'no settings', {}) }),
-  }
+  // namespace provided its fiber parks and no slot is ever declared. When a
+  // nav order is staged, the bench serves the nav namespace so the mirror
+  // holds a document and the scope can echo writes back.
+  const section: Record<string, unknown> = { [NAV_ORDER_FIELD]: navOrder ?? [] }
+  let revision = 0
+  const namespace = () => ({
+    ns: NAV_ORDER_SETTINGS_NAMESPACE,
+    schema: SettingsNavOrderSchema.toJSON(),
+    value: { ...section },
+    applies: 'live' as const,
+    secrets: [],
+    revision,
+  })
+  const describe = vi.fn(() => navOrder === undefined
+    ? Promise.resolve({ ok: false, error: new RemoteError('gateway/internal', 'no settings', {}) })
+    : Promise.resolve({
+      ok: true as const,
+      value: { writable: true, hasDocument: true, namespaces: [namespace()] },
+    }))
+  const mutate = vi.fn((_ns: string, ops: { path: string[]; value: unknown }[]) => {
+    const op = ops[0]!
+    section[op.path[0]!] = op.value
+    revision += 1
+    return Promise.resolve({ ok: true as const, value: namespace() })
+  })
   const reconnect = vi.fn()
   const connectionState = {
     getSnapshot: () => 'connected' as const,
@@ -32,12 +57,12 @@ async function bench() {
   ctx.provide('connection', { state: connectionState, reconnect } as never)
   ctx.provide('remote', {
     $on: () => () => {},
-    $host: { home: undefined, isLoopback: false },
-    settings,
+    $host: { home: undefined, isLoopback },
+    settings: { describe, mutate },
   } as never)
-  ctx.provide('remote.settings', settings as never)
+  ctx.provide('remote.settings', { describe, mutate } as never)
   await ctx.plugin({ inject: [...settingsInject], apply: settingsApply }).await()
-  return { ctx, slots: ctx.get('slots') as SlotRegistry, connectionState, reconnect }
+  return { ctx, slots: ctx.get('slots') as SlotRegistry, connectionState, reconnect, mutate }
 }
 
 function declare(slots: SlotRegistry): () => void {
@@ -178,5 +203,48 @@ describe('ui-settings apply', () => {
     for (const name of Object.keys(CHILD_SPECS) as Array<keyof typeof CHILD_SPECS>) {
       expect(b.slots.spec(name)).toBeUndefined()
     }
+  })
+})
+
+describe('settings nav order', () => {
+  it('pins user-listed sections above the rest and appends new sections at the tail', async () => {
+    const b = await bench({ isLoopback: true, navOrder: ['z', 'a'] })
+    declare(b.slots)
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+    const { sections } = injectedOf(b.slots).hooks
+    b.slots.register({ name: 'settings.section', id: 'a', order: 1, label: 'A' } as never, () => null)
+    b.slots.register({ name: 'settings.section', id: 'z', order: 20, label: 'Z' } as never, () => null)
+    // The pinned order arrives once the mirror holds the served document.
+    await vi.waitFor(() => {
+      expect(sections.getSnapshot().map(row => row.id)).toEqual(['z', 'a', 'general'])
+    })
+    // A section registered after the user pinned their layout appends after
+    // the pinned ones instead of displacing them.
+    b.slots.register({ name: 'settings.section', id: 'later', order: 5, label: 'Later' } as never, () => null)
+    expect(sections.getSnapshot().map(row => row.id)).toEqual(['z', 'a', 'general', 'later'])
+  })
+
+  it('persists a drop through setSectionOrder and re-projects on the scope echo', async () => {
+    const b = await bench({ isLoopback: true, navOrder: [] })
+    declare(b.slots)
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+    const injected = injectedOf(b.slots)
+    const { sections } = injected.hooks
+    b.slots.register({ name: 'settings.section', id: 'a', order: 1, label: 'A' } as never, () => null)
+    b.slots.register({ name: 'settings.section', id: 'z', order: 20, label: 'Z' } as never, () => null)
+    expect(sections.getSnapshot().map(row => row.id)).toEqual(['general', 'a', 'z'])
+    const listener = vi.fn()
+    const off = sections.subscribe(listener)
+    injected.setSectionOrder(['z', 'general', 'a'])
+    await vi.waitFor(() => {
+      expect(sections.getSnapshot().map(row => row.id)).toEqual(['z', 'general', 'a'])
+    })
+    expect(b.mutate).toHaveBeenCalledWith(
+      NAV_ORDER_SETTINGS_NAMESPACE,
+      [{ op: 'set', path: [NAV_ORDER_FIELD], value: ['z', 'general', 'a'] }],
+      expect.any(Number),
+    )
+    expect(listener).toHaveBeenCalled()
+    off()
   })
 })

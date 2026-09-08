@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useEffect, useState } from 'react'
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, createEvent, fireEvent, render, screen } from '@testing-library/react'
 import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
 import type { SettingsRootComponentProps } from '../src/client/shell-contract.ts'
 import { SettingsRoot } from '../src/client/SettingsRoot.tsx'
@@ -55,6 +55,7 @@ function mount({
   const listeners = new Set<() => void>()
   const connectionListeners = new Set<() => void>()
   const reconnect = vi.fn()
+  const setSectionOrder = vi.fn()
   const renderSlot = vi.fn(
     ((key: string, _owner: unknown, opts?: { only?: string }) => {
       if (key === 'settings.section') return <div data-testid={`section-${opts?.only ?? 'all'}`} />
@@ -75,6 +76,7 @@ function mount({
     useWorkspaces: unusedHook,
     wide,
     reconnect,
+    setSectionOrder,
     t: makeTranslate(en),
     useConnectionState: (select) => {
       const [, force] = useState(0)
@@ -110,7 +112,7 @@ function mount({
       for (const fn of [...connectionListeners]) fn()
     })
   }
-  return { view, renderSlot, bump, listeners, reconnect, setConnectionState }
+  return { view, renderSlot, bump, listeners, reconnect, setSectionOrder, setConnectionState }
 }
 
 function openPanel() {
@@ -339,5 +341,103 @@ describe('SettingsPanel navigation', () => {
     expect(listeners.size).toBe(1)
     view.unmount()
     expect(listeners.size).toBe(0)
+  })
+})
+
+describe('SettingsPanel nav reorder', () => {
+  /** jsdom has no DataTransfer; the stub satisfies the few fields the handlers touch. */
+  const dataTransfer = {
+    effectAllowed: '',
+    dropEffect: '',
+    setData: vi.fn(),
+    getData: vi.fn(),
+  }
+
+  /** Anchor a row's rect so `rowHalf` can resolve the pointer half. */
+  function stubRect(el: HTMLElement, top: number, height = 40) {
+    el.getBoundingClientRect = () => ({
+      top, height, bottom: top + height, left: 0, right: 0, width: 0, x: 0, y: top,
+      toJSON: () => ({}),
+    })
+  }
+
+  /** jsdom lacks DragEvent — the fireEvent fallback drops clientY, so pin it on the built event. */
+  function fireDrag(row: HTMLElement, kind: 'dragOver' | 'drop', clientY: number): void {
+    const event = kind === 'dragOver' ? createEvent.dragOver(row) : createEvent.drop(row)
+    Object.defineProperty(event, 'clientY', { value: clientY })
+    Object.defineProperty(event, 'dataTransfer', { value: { ...dataTransfer } })
+    fireEvent(row, event)
+  }
+
+  it('makes every nav row draggable and commits the full order on drop', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    const presets = screen.getByRole('button', { name: 'Agent presets' })
+    for (const row of [general, models, presets]) expect(row.getAttribute('draggable')).toBe('true')
+    stubRect(models, 100)
+    fireEvent.dragStart(general, { dataTransfer })
+    // Bottom half of Models: the dragged row lands after it.
+    fireDrag(models, 'dragOver', 130)
+    expect(models.className).toMatch(/dropAfter/)
+    fireDrag(models, 'drop', 130)
+    expect(setSectionOrder).toHaveBeenCalledWith(['models', 'general', 'agent-presets'])
+  })
+
+  it('inserts before the target on the top half', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const models = screen.getByRole('button', { name: 'Models' })
+    const presets = screen.getByRole('button', { name: 'Agent presets' })
+    stubRect(models, 100)
+    fireEvent.dragStart(presets, { dataTransfer })
+    fireDrag(models, 'dragOver', 105)
+    expect(models.className).toMatch(/dropBefore/)
+    fireDrag(models, 'drop', 105)
+    expect(setSectionOrder).toHaveBeenCalledWith(['general', 'agent-presets', 'models'])
+  })
+
+  it('skips same-position drops, self-drops, and drops after dragEnd', () => {
+    const { setSectionOrder } = mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    stubRect(models, 100)
+    // Dropping directly before the target row restores the current order: no write.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 105)
+    fireDrag(models, 'drop', 105)
+    // Self-drag never arms a marker.
+    fireEvent.dragStart(models, { dataTransfer })
+    fireDrag(models, 'dragOver', 105)
+    fireDrag(models, 'drop', 105)
+    // dragEnd clears the marker, so a late drop commits nothing.
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 105)
+    fireEvent.dragEnd(general)
+    fireDrag(models, 'drop', 105)
+    expect(setSectionOrder).not.toHaveBeenCalled()
+  })
+
+  it('ignores drag-over until a drag starts and keeps the marker until it moves', () => {
+    mount()
+    openPanel()
+    const general = screen.getByRole('button', { name: 'General' })
+    const models = screen.getByRole('button', { name: 'Models' })
+    stubRect(models, 100)
+    // No active drag: hover neither arms a marker nor opens a drop target.
+    fireDrag(models, 'dragOver', 130)
+    expect(models.className).not.toMatch(/dropBefore|dropAfter/)
+    fireEvent.dragStart(general, { dataTransfer })
+    fireDrag(models, 'dragOver', 130)
+    expect(models.className).toMatch(/dropAfter/)
+    // The marker only moves when the pointer half changes.
+    fireDrag(models, 'dragOver', 130)
+    expect(models.className).toMatch(/dropAfter/)
+    fireDrag(models, 'dragOver', 105)
+    expect(models.className).toMatch(/dropBefore/)
+    fireEvent.dragEnd(general)
+    expect(models.className).not.toMatch(/dropBefore|dropAfter/)
   })
 })

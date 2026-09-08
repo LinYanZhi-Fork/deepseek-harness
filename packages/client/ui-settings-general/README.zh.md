@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-`dsh-client-ui-settings-general` 是 dsh Web 客户端的设置外壳：Settings 面板从侧边栏底部的控件打开，该控件旁的连接故障指示器提供即时恢复操作；导航由各功能贡献的分区构建；首次运行的用户一次只走一个引导步骤。它还注册设置页面上所有不属于单一功能的内容：触发器、标题栏与关闭控件界面框架、「本地配置文件」操作、「通用」分区及其 `settings.general.item` slot，以及 `settings` 字典。归具体功能所有的行（「权限」、「语言」、「外观」）、分区（「模型」）与条件式首次使用引导步骤仍由各自的功能包提供；外壳本身不自带任何引导文案。
+`dsh-client-ui-settings-general` 是 dsh Web 客户端的设置外壳：Settings 面板从侧边栏底部的控件打开，该控件旁的连接故障指示器提供即时恢复操作；导航由各功能贡献的分区构建，用户可以拖拽导航行自定义顺序（持久化到用户设置文档）；首次运行的用户一次只走一个引导步骤。它还注册设置页面上所有不属于单一功能的内容：触发器、标题栏与关闭控件界面框架、「本地配置文件」操作、「通用」分区及其 `settings.general.item` slot，以及 `settings` 字典。归具体功能所有的行（「权限」、「语言」、「外观」）、分区（「模型」）与条件式首次使用引导步骤仍由各自的功能包提供；外壳本身不自带任何引导文案。
 
 ## 目录
 
@@ -35,6 +35,10 @@ kind: "package-reference"
 
 在回环浏览器上，只有当宿主确认可准备好一份由提供方持有的本地文档时，外壳才渲染**打开配置文件**。该操作会在原生文本编辑器中打开该文档（macOS 上绕过浏览器文件关联）。远程浏览器从不注册该操作，也从不发起这项特权设置读取。
 
+### 分区导航
+
+每个 `settings.section` 条目按 `order` 升序投影为一个导航行。用户可以把一行拖到另一行的上半或下半区来移动它；松手时外壳把当前可见的完整 id 序列提交到 `ui-settings-nav` settings 命名空间。此后投影按该持久化顺序固定这些 id、丢弃已无注册的 id，并把固定后新注册的分区追加到末尾——新插件的分区不会挤掉已固定的位置。没有持久化顺序时，行完全按功能声明的顺序渲染。
+
 ### 引导步骤
 
 引导账本按升序投影，每次只挂载一个步骤。注册方持有持久化完成状态、能力就绪状态、文案、变更操作与可见包装，因此独立注册的流程无法堆叠，外壳也不会成为第二个配置事实来源。可见步骤自行持有弹窗框架与应用根节点 `inert` 生命周期。
@@ -51,7 +55,7 @@ kind: "package-reference"
 
 ### 账本投影
 
-导航是 `settings.section` 账本的投影；导航 label 可以是跟随语言的 thunk，经 `resolveSlotLabel` 解析，并在分区账本更新或 locale revision 变化时重新渲染（`ctx.get('locale')` 可选读取，无硬 locale 依赖）。引导账本按升序投影；当前注册方会收到该条目的 id、`complete()` 与 `openSection(id)` 回调，完成或跳过当前步骤后，所有权转交给下一项。
+导航是 `settings.section` 账本的投影；导航 label 可以是跟随语言的 thunk，经 `resolveSlotLabel` 解析，并在分区账本更新或 locale revision 变化时重新渲染（`ctx.get('locale')` 可选读取，无硬 locale 依赖）。`ui-settings-nav` scope 中的持久化用户顺序也加入投影缓存键，因此一次拖拽的写入回显无需额外网络读取即可重新投影；组件通过注入的 `setSectionOrder` 回调提交松手结果，拖拽状态保持组件局部。引导账本按升序投影；当前注册方会收到该条目的 id、`complete()` 与 `openSection(id)` 回调，完成或跳过当前步骤后，所有权转交给下一项。
 
 ### 连接恢复
 
@@ -63,7 +67,7 @@ kind: "package-reference"
 
 ### 宿主端
 
-宿主端在用户设置 seam 中注册 `ui-onboarding`。`ui-settings-models` 提供的欢迎步骤通过既有公开 settings 边界读写其中的 `welcomeNoticeVersion`；外壳本身仍不持有产品策略。
+宿主端在用户设置 seam 中注册 `ui-onboarding` 与 `ui-settings-nav`。`ui-settings-models` 提供的欢迎步骤通过既有公开 settings 边界读写其中的 `welcomeNoticeVersion`；外壳通过同一边界读写导航顺序 `order` 列表。外壳本身仍不持有产品策略。
 
 </details>
 
@@ -99,6 +103,7 @@ kind: "package-reference"
 这些限制说明外壳自身提供什么、功能包必须提供什么；它们是当前包约束。
 
 - **「通用」分区没有内置行**：每一行仅在其所属功能插件挂载时出现；外壳单独无法填满该分区。
+- **导航排序仅支持指针拖拽**：HTML5 拖拽没有键盘替代，纯键盘用户保持插件声明的顺序；键盘排序交互属于延期工作。
 
 <a id="dev-note"></a>
 ### 开发备注
@@ -110,4 +115,4 @@ kind: "package-reference"
 
 </details>
 
-**运行时不变式：** 不发布伴生入口。settings seam 校验并发布持久 onboarding section，slot core 会拒绝冲突；本地 document action 由 store 与组件测试覆盖。
+**运行时不变式：** 不发布伴生入口。settings seam 校验并发布持久 onboarding 与 nav-order section，slot core 会拒绝冲突；本地 document action 由 store 与组件测试覆盖。

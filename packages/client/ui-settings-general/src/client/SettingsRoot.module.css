@@ -157,6 +157,39 @@
   background: var(--dsw-specific-sidebar-nav-item-active);
 }
 
+/* The dragged row recedes so the insert marker reads as the landing target. */
+.navCell.dragging {
+  opacity: 0.5;
+}
+
+/* Drag insert marker: a 2px accent rule between rows, absolutely positioned
+   so it neither resembles a row border nor changes layout. */
+.navCell.dropBefore,
+.navCell.dropAfter {
+  position: relative;
+}
+
+.navCell.dropBefore::before,
+.navCell.dropAfter::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--dsw-alias-state-business-primary);
+  pointer-events: none;
+}
+
+.navCell.dropBefore::before {
+  top: -3px;
+}
+
+.navCell.dropAfter::after {
+  bottom: -3px;
+}
+
 .navIcon {
   flex: none;
 }

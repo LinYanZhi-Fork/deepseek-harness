@@ -31,12 +31,19 @@ function navIcon(id: string) {
   return <IconSettingsOutline16 className={css.navIcon} size={16} />
 }
 
+/** The pointer's half of a row; an insert line lands above or below. */
+function rowHalf(e: { clientY: number; currentTarget: HTMLElement }): 'before' | 'after' {
+  const rect = e.currentTarget.getBoundingClientRect()
+  return e.clientY < rect.top + rect.height / 2 ? 'before' : 'after'
+}
+
 type PanelProps = {
   rows: readonly SettingsSectionRow[]
   renderSlot: SettingsRootComponentProps['renderSlot']
   activeId: string | undefined
   onSelect: (id: string) => void
   onClose: () => void
+  setSectionOrder: (ids: readonly string[]) => void
 }
 
 /**
@@ -44,11 +51,29 @@ type PanelProps = {
  * header button, a mask click, and document-level Escape (mounted only while
  * open, so the listener lifetime is the panel's).
  */
-function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose }: PanelProps) {
+function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose, setSectionOrder }: PanelProps) {
   // Entries can unmount underneath the requested id, so the render-time
   // projection falls back to the first row when the id is gone.
   const active = rows.find(r => r.id === activeId)?.id ?? rows[0]?.id
   const titleId = useId()
+  // Transient HTML5 drag state; the drop commits the full visible order once.
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [overHalf, setOverHalf] = useState<{ id: string; half: 'before' | 'after' } | null>(null)
+  const endDrag = () => {
+    setDragId(null)
+    setOverHalf(null)
+  }
+  const commitDrop = (sourceId: string, targetId: string, half: 'before' | 'after') => {
+    const ids = rows.map(row => row.id)
+    const without = ids.filter(id => id !== sourceId)
+    const targetIndex = without.indexOf(targetId)
+    /* v8 ignore next -- drop handlers only fire on rendered rows, so the target always exists */
+    if (targetIndex === -1) return
+    const insertAt = half === 'before' ? targetIndex : targetIndex + 1
+    const next = [...without.slice(0, insertAt), sourceId, ...without.slice(insertAt)]
+    if (next.length === ids.length && next.every((id, index) => id === ids[index])) return
+    setSectionOrder(next)
+  }
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -69,18 +94,52 @@ function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose }: PanelP
         <nav className={css.nav}>
           <div className={css.navTitle} id={titleId}>{renderSlot('settings.header', {})}</div>
           <div className={css.navList}>
-            {rows.map(row => (
-              <button
-                key={row.id}
-                type="button"
-                className={clsx(css.navCell, row.id === active && css.active)}
-                aria-current={row.id === active ? 'true' : undefined}
-                onClick={() => { onSelect(row.id) }}
-              >
-                {navIcon(row.id)}
-                <span className={css.navLabel}>{row.label}</span>
-              </button>
-            ))}
+            {rows.map((row) => {
+              const marker = dragId !== null && dragId !== row.id && overHalf?.id === row.id
+                ? overHalf.half
+                : null
+              return (
+                <button
+                  key={row.id}
+                  type="button"
+                  draggable
+                  className={clsx(
+                    css.navCell,
+                    row.id === active && css.active,
+                    dragId === row.id && css.dragging,
+                    marker === 'before' && css.dropBefore,
+                    marker === 'after' && css.dropAfter,
+                  )}
+                  aria-current={row.id === active ? 'true' : undefined}
+                  onClick={() => { onSelect(row.id) }}
+                  onDragStart={(e) => {
+                    e.dataTransfer.effectAllowed = 'move'
+                    e.dataTransfer.setData('text/plain', row.id)
+                    setDragId(row.id)
+                  }}
+                  onDragEnd={endDrag}
+                  onDragOver={(e) => {
+                    if (dragId === null || dragId === row.id) return
+                    e.preventDefault()
+                    e.dataTransfer.dropEffect = 'move'
+                    // Resolve the half before the updater runs: React may defer
+                    // it past the synthetic event, whose currentTarget is null then.
+                    const half = rowHalf(e)
+                    setOverHalf(previous =>
+                      previous?.id === row.id && previous.half === half ? previous : { id: row.id, half })
+                  }}
+                  onDrop={(e) => {
+                    if (dragId === null || dragId === row.id || overHalf?.id !== row.id) return
+                    e.preventDefault()
+                    commitDrop(dragId, row.id, overHalf.half)
+                    endDrag()
+                  }}
+                >
+                  {navIcon(row.id)}
+                  <span className={css.navLabel}>{row.label}</span>
+                </button>
+              )
+            })}
           </div>
         </nav>
         <div className={css.content}>
@@ -108,6 +167,7 @@ function SettingsPanel({ rows, renderSlot, activeId, onSelect, onClose }: PanelP
 export function SettingsRoot(props: SettingsRootComponentProps) {
   const {
     wide, reconnect, useConnectionState, useSections, useOnboardingSteps, useSessions, renderSlot, t,
+    setSectionOrder,
   } = props
   const [open, setOpen] = useState(false)
   const [activeId, setActiveId] = useState<string | undefined>(undefined)
@@ -208,6 +268,7 @@ export function SettingsRoot(props: SettingsRootComponentProps) {
           activeId={activeId}
           onSelect={setActiveId}
           onClose={close}
+          setSectionOrder={setSectionOrder}
         />
       )}
       {/* Dialog chrome and `#root` inert ownership live inside each step's

@@ -29,6 +29,8 @@ import { GeneralSection } from './GeneralSection.tsx'
 import { SettingsDocumentAction } from './SettingsDocumentAction.tsx'
 import type { SettingsDocumentActionInjected } from './SettingsDocumentAction.tsx'
 import { SettingsDocumentStore } from './settings-document-store.ts'
+import { NAV_ORDER_FIELD, NAV_ORDER_SETTINGS_NAMESPACE, type SettingsNavOrder } from '../nav-settings.ts'
+import { applyNavOrder } from './nav-order.ts'
 import { en, zh, type SettingsKey } from './locales.ts'
 
 export type {
@@ -67,6 +69,10 @@ export const inject = ['slots', 'locale', 'connection', 'remote', 'remote.settin
 export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-settings-general: dictionaries')
   const connection = ctx.get('connection') as ConnectionHandle
+  // The user's pinned section order rides the settings document like every
+  // other GUI preference; the mirror's invalidation subscriptions already live
+  // with ui-settings, so binding adds no wire read of its own.
+  const navOrder = ctx.settingsScope.bind<SettingsNavOrder>({ namespace: NAV_ORDER_SETTINGS_NAMESPACE })
 
   // Copy freshness is framework-owned: components read the standard `t`
   // seat, and the nav label is a thunk the owner resolves per render — no
@@ -87,40 +93,51 @@ export function apply(ctx: ClientContext): void {
   // declares the settings slots. Ledger → nav-row projection as an observable
   // source (uSES contract: getSnapshot returns the cached rows until the
   // ledger version moves). Labels may be locale-following thunks, so the cache
-  // key includes the locale revision and subscribers ride both sources.
+  // key includes the locale revision and subscribers ride both sources; the
+  // persisted user order joins the key so a pinned layout re-projects on the
+  // scope echo.
   let rowsVersion = -1
   let rowsRevision = -1
+  let rowsOrderRevision: number | undefined = -1
   let rows: readonly SettingsSectionRow[] = []
   let onboardingVersion = -1
   let onboardingSteps: readonly SettingsOnboardingStep[] = []
   const shellInjected = (): SettingsRootInjected => ({
     reconnect: () => { connection.reconnect() },
+    setSectionOrder: (ids) => { void navOrder.set(NAV_ORDER_FIELD, [...ids]) },
     hooks: {
       connectionState: connection.state,
       sections: {
         getSnapshot: () => {
           const version = ctx.slots.getVersion('settings.section')
           const revision = ctx.locale.getSnapshot().revision
-          if (version !== rowsVersion || revision !== rowsRevision) {
+          const orderRevision = navOrder.getSnapshot().revision
+          if (version !== rowsVersion || revision !== rowsRevision || orderRevision !== rowsOrderRevision) {
             rowsVersion = version
             rowsRevision = revision
-            rows = ctx.slots.entries('settings.section')
-              .map(e => ({
-                /* v8 ignore next -- list-slot registration requires id (SlotCore rejects an entry without one) */
-                id: e.options.id ?? '',
-                order: e.options.order ?? 0,
-                label: resolveSlotLabel(e.options.label) ?? '',
-              }))
-              .sort((a, b) => a.order - b.order)
+            rowsOrderRevision = orderRevision
+            rows = applyNavOrder(
+              ctx.slots.entries('settings.section')
+                .map(e => ({
+                  /* v8 ignore next -- list-slot registration requires id (SlotCore rejects an entry without one) */
+                  id: e.options.id ?? '',
+                  order: e.options.order ?? 0,
+                  label: resolveSlotLabel(e.options.label) ?? '',
+                }))
+                .sort((a, b) => a.order - b.order),
+              navOrder.getSnapshot().value?.order ?? [],
+            )
           }
           return rows
         },
         subscribe: (listener) => {
           const offLedger = ctx.slots.subscribe('settings.section', listener)
           const offLocale = ctx.locale.subscribe(listener)
+          const offOrder = navOrder.subscribe(listener)
           return () => {
             offLedger()
             offLocale()
+            offOrder()
           }
         },
       },

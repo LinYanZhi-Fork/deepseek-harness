@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-client-ui-settings-general` is the settings shell of the dsh web client: the Settings panel opens from the sidebar's bottom control, a connection-failure indicator beside that control offers immediate recovery, the navigation is built from the sections features contribute, and first-run users are walked through one onboarding step at a time. It also registers everything on the Settings pages that belongs to no single feature: the trigger/header/close chrome content, the local configuration-file action, the General section and its `settings.general.item` slot, and the `settings` dictionaries. Feature-owned rows (Permission, Language, Appearance), sections (Models), and conditional onboarding steps stay with their feature packages; the shell itself ships no onboarding copy of its own.
+`dsh-client-ui-settings-general` is the settings shell of the dsh web client: the Settings panel opens from the sidebar's bottom control, a connection-failure indicator beside that control offers immediate recovery, the navigation is built from the sections features contribute, users can drag those nav rows into their own order (persisted to the user-settings document), and first-run users are walked through one onboarding step at a time. It also registers everything on the Settings pages that belongs to no single feature: the trigger/header/close chrome content, the local configuration-file action, the General section and its `settings.general.item` slot, and the `settings` dictionaries. Feature-owned rows (Permission, Language, Appearance), sections (Models), and conditional onboarding steps stay with their feature packages; the shell itself ships no onboarding copy of its own.
 
 ## Table of Contents
 
@@ -35,6 +35,10 @@ The General section holds rows registered into `settings.general.item` by featur
 
 On a loopback browser, the shell renders **Open configuration file** only when the Host confirms that a provider-owned local document can be prepared. The action opens that document in the native text editor (bypassing the browser file association on macOS). Remote browsers never register the action and never issue the privileged settings read.
 
+### The section navigation
+
+Every `settings.section` entry projects into one nav row in ascending `order`. Users can drag a row onto another row's top or bottom half to move it; the drop commits the full visible id sequence to the `ui-settings-nav` settings namespace. The projection then pins the persisted ids in that order, drops ids that no longer have a registration, and appends sections registered after the pin at the tail — so a new plugin's section never displaces a pinned position. Without a persisted order the rows render exactly as features declare them.
+
 ### Onboarding steps
 
 The onboarding ledger projects in ascending order and mounts exactly one step at a time. Registrants own durable completion, capability readiness, copy, mutations, and their visible wrapper, so independently registered flows cannot stack and the shell does not become a second configuration fact source. Visible steps own their dialog chrome and app-root `inert` lifecycle.
@@ -51,7 +55,7 @@ The shell owns the chrome and the projections; every piece of content and copy b
 
 ### Ledger projections
 
-The navigation is a projection of the `settings.section` ledger; nav labels may be locale-following thunks, resolved through `resolveSlotLabel` and re-rendered on the section ledger bump or the locale revision (an optional `ctx.get('locale')` read; no hard locale dependency). The onboarding ledger projects in ascending order; the active registrant receives its id, `complete()`, and an `openSection(id)` callback, and completing or skipping transfers ownership to the next entry.
+The navigation is a projection of the `settings.section` ledger; nav labels may be locale-following thunks, resolved through `resolveSlotLabel` and re-rendered on the section ledger bump or the locale revision (an optional `ctx.get('locale')` read; no hard locale dependency). The persisted user order from the `ui-settings-nav` scope joins the projection cache key, so a drop's write echo re-projects without a wire read; the component commits drops through an injected `setSectionOrder` callback and keeps drag state local. The onboarding ledger projects in ascending order; the active registrant receives its id, `complete()`, and an `openSection(id)` callback, and completing or skipping transfers ownership to the next entry.
 
 ### Connection recovery
 
@@ -63,7 +67,7 @@ On a loopback page, the Client loads the provider's `hasDocument` capability thr
 
 ### Host half
 
-The Host half registers `ui-onboarding` in the user-settings seam. The welcome step contributed by ui-settings-models reads and writes its `welcomeNoticeVersion` through the existing public settings boundary; the shell itself remains policy-free.
+The Host half registers `ui-onboarding` and `ui-settings-nav` in the user-settings seam. The welcome step contributed by ui-settings-models reads and writes its `welcomeNoticeVersion` through the existing public settings boundary; the shell reads and writes the nav-order `order` list through the same boundary. The shell itself remains policy-free.
 
 </details>
 
@@ -99,6 +103,7 @@ None; this package neither assembles nor sends a provider request.
 These limits define what the shell itself provides versus what features must supply; they are current package constraints.
 
 - **The General section has no built-in rows** — each row appears only when its owning feature plugin is mounted; the shell cannot fill the section alone.
+- **Nav reorder is pointer-drag only** — HTML5 drag has no keyboard alternative, so keyboard-only users keep the plugin-declared order; a keyboard reorder affordance is deferred work.
 
 <a id="dev-note"></a>
 ### Dev Note
@@ -110,4 +115,4 @@ None.
 
 </details>
 
-**Runtime invariant:** No companion is published. The settings seam validates and publishes the durable onboarding section, while slot conflicts fail loud in the slot core. The local document action is browser state over typed RPC responses and is covered by store/component tests rather than a Cordis runtime relationship.
+**Runtime invariant:** No companion is published. The settings seam validates and publishes the durable onboarding and nav-order sections, while slot conflicts fail loud in the slot core. The local document action is browser state over typed RPC responses and is covered by store/component tests rather than a Cordis runtime relationship.
