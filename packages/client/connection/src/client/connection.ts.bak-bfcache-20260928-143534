@@ -111,7 +111,6 @@ export class ConnectionController {
     if (this.running) return
     this.running = true
     void this.loop()
-    installBfcacheRecovery(() => { this.reconnect() })
   }
 
   /** Stop the loop and abort the current generation source. */
@@ -331,26 +330,5 @@ function waitForReady<T>(ready: Promise<T>, timeoutMs: number, signal: AbortSign
         finish({ error: error as Error })
       },
     )
-  })
-}
-
-/**
- * Register a one-shot bfcache-resume hook that fires `recover` when Chrome
- * restores this page from Back-Forward Cache. See
- * `stream-client.installBfcacheRecovery` for the rationale; this copy lives
- * here because the ConnectionController lives in a different package and the
- * helper is too small to live anywhere but next to its caller.
- */
-function installBfcacheRecovery(recover: () => void): void {
-  const w = (globalThis as { window?: { addEventListener: (k: string, l: EventListener) => void } }).window
-  if (w === undefined || w.addEventListener === undefined) return
-  const sentinel = '__dsh_bfcache_recovery_installed'
-  const scope = w as unknown as { [sentinel]?: boolean }
-  if (scope[sentinel] === true) return
-  scope[sentinel] = true
-  w.addEventListener('pageshow', (event) => {
-    const persisted = (event as PageTransitionEvent).persisted === true
-    if (!persisted) return
-    try { recover() } catch (error) { console.error('[bfcache] recovery threw:', error) }
   })
 }

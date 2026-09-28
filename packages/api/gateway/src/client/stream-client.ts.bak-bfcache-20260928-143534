@@ -49,7 +49,6 @@ export class RemoteStreamMuxClient {
     const pending = this.keepAlive
     if (pending === undefined) this.maintain()
     else void pending.then(() => { this.maintain() })
-    installBfcacheRecovery(() => { this.reconnect() })
   }
 
   /** Cancel the current socket or retry wait and start a fresh attempt immediately. */
@@ -243,11 +242,6 @@ export class RemoteStreamMuxClient {
     if (this.socket !== socket) return
     this.socket = undefined
     this.failAll(error)
-    // The carrier lost its physical socket (bfcache freeze, navigation, idle
-    // timeout). Start a fresh connect attempt immediately when still running
-    // — without this, a bfcache round-trip leaves the logical streams blocked
-    // on waitForSocket until an unrelated caller happens to open one.
-    if (this.running && !this.disposed) this.maintain()
   }
 
   private maintain(): void {
@@ -313,30 +307,4 @@ function remoteStreamUrl(): string {
   const url = new URL(REMOTE_STREAM_MUX_PATH, base)
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
   return url.href
-}
-
-/**
- * Register a one-shot bfcache-resume hook that fires `recover` when the
- * browser restores this page from Back-Forward Cache. Without this, Chrome's
- * bfcache freezes the page mid-flight, marks every WebSocket as closed with
- * the "Page entered Back-Forward Cache" reason, and never re-runs user code
- * until navigation — the next user action sees a dead mux.
- *
- * `persisted === true` is the bfcache marker; `pageshow` also fires on a
- * normal first paint, so the predicate filters out the cold-load case.
- * Idempotent: a second registration is a no-op so two clients (this mux
- * plus the ConnectionController) can each install independently.
- */
-function installBfcacheRecovery(recover: () => void): void {
-  const w = (globalThis as { window?: { addEventListener: (k: string, l: EventListener) => void } }).window
-  if (w === undefined || w.addEventListener === undefined) return
-  const sentinel = '__dsh_bfcache_recovery_installed'
-  const scope = w as unknown as { [sentinel]?: boolean }
-  if (scope[sentinel] === true) return
-  scope[sentinel] = true
-  w.addEventListener('pageshow', (event) => {
-    const persisted = (event as PageTransitionEvent).persisted === true
-    if (!persisted) return
-    try { recover() } catch (error) { console.error('[bfcache] recovery threw:', error) }
-  })
 }
