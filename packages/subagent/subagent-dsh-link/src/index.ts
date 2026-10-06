@@ -89,7 +89,7 @@ class HttpSubagentProvider implements SubagentProvider {
         this.ctx.logger.warn(`subagent-dsh-link "${this.name}": child run failed (${stopReason}): ${error.message}`)
       },
     }
-    return startHttpRun(request, spec, failureDiagnostic)
+    return Promise.resolve(startHttpRun(request, spec, failureDiagnostic))
   }
 }
 

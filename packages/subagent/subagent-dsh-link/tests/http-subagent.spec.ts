@@ -9,6 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { createServer, type IncomingMessage, type ServerResponse, type Server } from 'node:http'
 import { AddressInfo } from 'node:net'
+import { tmpdir } from 'node:os'
 import { brandString } from '@deepseek-ai/dsh-brand'
 import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import type { SessionId } from '@deepseek-ai/dsh-session'
@@ -28,11 +29,9 @@ const TEST_DIAGNOSTIC = (stage: string): string => `Subagent failure (provider: 
 /** In-process dsh-link server impersonation. */
 class FakePeer {
   readonly server: Server
-  readonly url: string
-  private readonly handler: (req: IncomingMessage, res: ServerResponse) => void
+  url: string = ''
 
   constructor(handler: (req: IncomingMessage, res: ServerResponse) => void) {
-    this.handler = handler
     this.server = createServer(handler)
   }
 
@@ -43,6 +42,7 @@ class FakePeer {
   }
 
   async close(): Promise<void> {
+    if (!this.server.listening) return
     await new Promise<void>((resolve, reject) => {
       this.server.close(error => error ? reject(error) : resolve())
     })
@@ -56,7 +56,7 @@ function makeRequest(overrides: Partial<ResolvedSubagentStartRequest> = {}): Res
   const parent = {
     session: {
       id: brandString<SessionId>('session-parent-test'),
-      header: { cwd: '/tmp' },
+      header: { cwd: tmpdir() },
     },
     ctx: { agents: { withInitiator: async <T>(_fn: () => T | Promise<T>): Promise<T> => _fn() } },
   } as unknown as ResolvedSubagentStartRequest['parent']
@@ -168,17 +168,17 @@ describe('startHttpRun', () => {
     await run.dispose()
   })
 
-  it('rejects before spawning when the request was already aborted at start', async () => {
-    peer = new FakePeer((_req, res) => {
-      res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end('{}')
-    })
-    await peer.listen()
+  it('rejects before spawning when the request was already aborted at start', () => {
     const controller = new AbortController()
     controller.abort()
-    await expect(
-      startHttpRun(makeRequest({ signal: controller.signal }), makeSpec(peer), TEST_DIAGNOSTIC),
-    ).rejects.toThrow(/aborted/)
+    const spec: HttpRunSpec = {
+      peer: { name: 'unused', url: 'http://127.0.0.1:1', token: '' },
+      timeoutMs: 1000,
+      maxResponseBytes: 1024,
+    }
+    expect(() =>
+      startHttpRun(makeRequest({ signal: controller.signal }), spec, TEST_DIAGNOSTIC),
+    ).toThrow(/aborted/)
   })
 
   it('enforces the maxResponseBytes cap by destroying the socket mid-stream', async () => {

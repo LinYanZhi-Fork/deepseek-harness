@@ -1,20 +1,58 @@
 # Test-only patch that mounts the dsh-link subagent provider against the
 # driver-owned mock peer. The peer URL is injected via `process.env` from
-# `driver.ts` so the test never hardcodes an external port.
+# `driver.ts` so the test never hardcodes an external port. The shipped
+# headless profile's startup and runner services are disabled because this
+# e2e drives one delegation turn through the Loader; the shipped
+# `tool-subagent` entry is also disabled so the test owns the tool name and
+# avoids clashing with the production one.
+- id: headless-startup
+  disabled: true
+
+- id: headless-runner
+  disabled: true
+
+- id: tool-subagent
+  disabled: true
+
+- id: agent-loop
+  config:
+    agents:
+      - id: main
+        provider: mock
+        model: mock-delegate
+        cwd: !!js process.cwd()
+
+- id: session-persistence-jsonl
+  config:
+    root: './.sessions'
+    compression: none
+
 - insert:
-    - id: subagent-dsh-link
+    - id: mock-llm
+      name: './mock-delegating-llm.ts'
+
+    - id: subagent-model-selection-settings
+      name: '@deepseek-ai/dsh-tool-subagent/model-selection-settings'
+      config:
+        enabled: true
+        allowedModels:
+          - provider: mock
+            model: mock-routed
+
+    - id: subagent-dsh-link-test
       name: '@deepseek-ai/dsh-subagent-dsh-link'
       config:
-        providerName: dsh-link
+        providerName: dsh-link-test
         peer:
           name: mock-peer
           url: !!js process.env.DSH_TEST_DSH_LINK_PEER_URL
           token: shared-secret
         timeoutMs: 5000
         maxResponseBytes: 1048576
-    - id: tool-subagent
-      name: '@deepseek-ai/dsh-tool-subagent'
+
+    - id: tool-subagent-dsh-link-scoped
+      name: './scoped-tool-subagent.ts'
       config:
-        provider: dsh-link
+        provider: dsh-link-test
         toolName: subagent
         maxDepth: 'provider-managed'

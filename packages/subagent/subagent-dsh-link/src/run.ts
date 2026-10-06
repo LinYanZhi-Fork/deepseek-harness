@@ -51,6 +51,10 @@ function textBlock(text: string): ContentBlock {
   return { type: 'text', text }
 }
 
+/** Literal discriminator that distinguishes the cancellation arm from the response arm. */
+const CANCELLED_SENTINEL = 'http-run-cancelled' as const
+type RunOutcome = typeof CANCELLED_SENTINEL | { statusCode: number; body: string }
+
 /**
  * Coalesce one user prompt's content blocks into the single `task` string the
  * dsh-link `POST /` endpoint accepts. Phase 1 ships text-only; a future dsh-link
@@ -77,7 +81,7 @@ function promptToTask(prompt: ContentBlock[]): string {
  * Start and publish one HTTP child after the request's abort state is
  * captured. Transport-level failures settle through the run result; startup
  * cancellation rejects only after the HTTP request is torn down. Disposal
- * destroys any in-flight request and is idempotent.
+ * destroys the in-flight request and is idempotent.
  * @param request - the start request; its signal is the cancellation channel.
  * @param spec - the resolved peer, timeout, response cap, and error sink.
  * @param failureDiagnostic - provider-owned fixed safe-failure text builder.
@@ -87,7 +91,7 @@ export function startHttpRun(
   request: ResolvedSubagentStartRequest | SubagentStartRequest,
   spec: HttpRunSpec,
   failureDiagnostic: (stage: FailureStage) => string,
-): Promise<SubagentRun> {
+): SubagentRun {
   if (request.signal.aborted) {
     throw new Error('subagent request was aborted before the HTTP child started')
   }
@@ -113,15 +117,23 @@ export function startHttpRun(
     activeRequest?.destroy()
   }
 
+  // Buffer of partial assistant output, exposed to settleRunResult so a
+  // cancellation or transport error can still surface a faithful partial
+  // answer instead of an empty `output`.
+  let partialOutput: ContentBlock[] = []
+  const collectOutput = (): ContentBlock[] => partialOutput
+
   let diagnostic: string | undefined
+  const collectDiagnostic = (): string | undefined => diagnostic
+
   const result: Promise<SubagentResult> = settleRunResult({
-    attempt: async () => {
+    attempt: async (): Promise<SubagentResult> => {
       try {
         const u = new URL('/', spec.peer.url)
         const body = JSON.stringify({ task: promptToTask(request.prompt) })
 
         // Race the HTTP round-trip against the local cancellation signal.
-        const response = await Promise.race([
+        const outcome: RunOutcome = await Promise.race([
           sendHttp({
             url: u,
             token: spec.peer.token,
@@ -130,54 +142,59 @@ export function startHttpRun(
             maxResponseBytes: spec.maxResponseBytes,
             onRequest: (req) => { activeRequest = req },
           }),
-          cancelSettled.then(() => Symbol.for('http.run.cancelled') as const),
+          cancelSettled.then(() => CANCELLED_SENTINEL),
         ])
-        if (response === Symbol.for('http.run.cancelled')) {
-          return { output: [], stopReason: 'aborted' }
+        if (outcome === CANCELLED_SENTINEL) {
+          return { output: partialOutput, stopReason: 'aborted' }
         }
-        if (response.statusCode < 200 || response.statusCode >= 300) {
+        if (outcome.statusCode < 200 || outcome.statusCode >= 300) {
           diagnostic = failureDiagnostic('response')
-          spec.onError?.(new Error(`peer ${u.host} responded ${response.statusCode}`), 'error')
+          spec.onError?.(new Error(`peer ${u.host} responded ${outcome.statusCode}`), 'error')
           return {
-            output: [],
+            output: partialOutput,
             stopReason: 'error',
             diagnostic,
           }
         }
         let parsed: { ok?: boolean; output?: string; error?: string; exitCode?: number }
         try {
-          parsed = JSON.parse(response.body) as typeof parsed
+          parsed = JSON.parse(outcome.body) as typeof parsed
         } catch (cause) {
           diagnostic = failureDiagnostic('response')
           spec.onError?.(cause instanceof Error ? cause : new Error(String(cause)), 'error')
-          return { output: [], stopReason: 'error', diagnostic }
+          return { output: partialOutput, stopReason: 'error', diagnostic }
         }
         if (parsed.ok === false) {
           diagnostic = failureDiagnostic('response')
           spec.onError?.(new Error(parsed.error ?? 'peer reported failure'), 'error')
+          if (parsed.output !== undefined) partialOutput = [textBlock(parsed.output)]
           return {
-            output: parsed.output !== undefined ? [textBlock(parsed.output)] : [],
+            output: partialOutput,
             stopReason: 'error',
             diagnostic,
           }
         }
+        const block = textBlock(parsed.output ?? outcome.body)
+        partialOutput = [block]
         return {
-          output: [textBlock(parsed.output ?? response.body)],
+          output: [block],
           stopReason: 'completed',
         }
       } catch (error) {
         if (flags.cancelled) {
-          return { output: [], stopReason: 'aborted' }
+          return { output: partialOutput, stopReason: 'aborted' }
         }
         diagnostic = failureDiagnostic('request')
         spec.onError?.(error instanceof Error ? error : new Error(String(error)), 'error')
         return {
-          output: [],
+          output: partialOutput,
           stopReason: 'error',
           diagnostic,
         }
       }
     },
+    collectOutput,
+    collectDiagnostic,
     cancelled: () => flags.cancelled,
     onError: spec.onError,
     signal: request.signal,
@@ -203,8 +220,7 @@ interface HttpResponse {
 /**
  * Issue one HTTP POST with a Bearer token, a hard response-size cap, and a
  * timeout. The `onRequest` hook lets the caller destroy the in-flight socket
- * on dispose. The `teardown` argument is unused at the call site but kept on
- * the type so future retries can plug in without churning callers.
+ * on dispose.
  */
 function sendHttp(opts: {
   url: URL

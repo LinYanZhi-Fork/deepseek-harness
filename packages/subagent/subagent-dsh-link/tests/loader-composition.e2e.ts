@@ -22,7 +22,7 @@ const configPath = fileURLToPath(new URL('dsh-link.patch.yml', fixtureDir))
 const repoTsconfig = fileURLToPath(new URL('../../../../tsconfig.json', import.meta.url))
 
 async function jsonlFiles(dir: string): Promise<string[]> {
-  const entries = await readdir(dir, { withFileDirents: true })
+  const entries = await readdir(dir, { withFileTypes: true })
   const paths = await Promise.all(entries.map(async (entry) => {
     const path = join(dir, entry.name)
     if (entry.isDirectory()) return jsonlFiles(path)
