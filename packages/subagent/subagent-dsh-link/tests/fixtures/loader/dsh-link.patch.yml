@@ -1,0 +1,20 @@
+# Test-only patch that mounts the dsh-link subagent provider against the
+# driver-owned mock peer. The peer URL is injected via `process.env` from
+# `driver.ts` so the test never hardcodes an external port.
+- insert:
+    - id: subagent-dsh-link
+      name: '@deepseek-ai/dsh-subagent-dsh-link'
+      config:
+        providerName: dsh-link
+        peer:
+          name: mock-peer
+          url: !!js process.env.DSH_TEST_DSH_LINK_PEER_URL
+          token: shared-secret
+        timeoutMs: 5000
+        maxResponseBytes: 1048576
+    - id: tool-subagent
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: dsh-link
+        toolName: subagent
+        maxDepth: 'provider-managed'
