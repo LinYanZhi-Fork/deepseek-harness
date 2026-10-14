@@ -1,6 +1,7 @@
 /** Controlled native checkbox with a caller-owned visible and accessible label. */
 
 import clsx from 'clsx'
+import type { JSX } from 'react'
 import css from './Checkbox.module.css'
 
 /**
@@ -20,7 +21,7 @@ export function Checkbox({ checked, onChange, label, disabled = false, title, cl
   disabled?: boolean
   title?: string | undefined
   className?: string | undefined
-}) {
+}): JSX.Element {
   return (
     <label className={clsx(css.checkbox, className)} title={title}>
       <input type="checkbox" checked={checked} disabled={disabled}

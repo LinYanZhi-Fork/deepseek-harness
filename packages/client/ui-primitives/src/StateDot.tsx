@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import css from './StateDot.module.css'
 import { IconCheckOutlineRegular } from './icons/index.tsx'
+import type { JSX } from 'react'
 
 /**
  * State semantic: green done / amber user-attention / tertiary-grey loading /
@@ -35,7 +36,7 @@ export function StateDot({ state, size, className, appearance = 'dot' }: {
   size?: number | undefined
   className?: string | undefined
   appearance?: 'dot' | 'step'
-}) {
+}): JSX.Element {
   const edge = size ?? (state === 'ongoing' ? 14 : 10)
   if (state === 'ongoing') {
     return (

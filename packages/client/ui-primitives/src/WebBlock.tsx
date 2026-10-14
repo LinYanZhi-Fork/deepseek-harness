@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { MarkdownText, type MarkdownLabels } from './markdown/MarkdownText.tsx'
 import { LinkIconMedium } from './LinkIcon.tsx'
+import type { JSX } from 'react'
 import css from './WebBlock.module.css'
 
 /**
@@ -191,6 +192,6 @@ function WebFetchBlock({ url, statusCode, truncated, labels, className }: WebFet
  * @param props - see {@link WebBlockProps}; `kind` selects the search or fetch body.
  * @returns the web card element.
  */
-export function WebBlock(props: WebBlockProps) {
+export function WebBlock(props: WebBlockProps): JSX.Element {
   return props.kind === 'search' ? <WebSearchBlock {...props} /> : <WebFetchBlock {...props} />
 }

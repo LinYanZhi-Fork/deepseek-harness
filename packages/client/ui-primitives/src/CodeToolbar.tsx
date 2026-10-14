@@ -4,6 +4,7 @@ import {
 } from './icons/index.tsx'
 import { Tooltip } from './Tooltip.tsx'
 import { supportsHighlighting } from './markdown/highlight.ts'
+import type { JSX } from 'react'
 import css from './CodeCard.module.css'
 
 /** Localized language fallback and wrapping actions supplied by the card owner. */
@@ -35,7 +36,9 @@ interface CodeToolbarProps {
  * @param props - Localized labels, current state, and card-owned actions.
  * @returns The shared code-card header.
  */
-export function CodeToolbar({ lang, title, status, labels, copyLabel, copiedLabel, copied, wrapped, onCopy, onWrap }: CodeToolbarProps) {
+export function CodeToolbar({
+  lang, title, status, labels, copyLabel, copiedLabel, copied, wrapped, onCopy, onWrap,
+}: CodeToolbarProps): JSX.Element {
   const wrapLabel = wrapped ? labels.unwrapLabel : labels.wrapLabel
   const clipboardLabel = copied ? copiedLabel : copyLabel
   return (
