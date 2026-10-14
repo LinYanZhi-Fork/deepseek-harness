@@ -8,6 +8,7 @@ overrides:
   extract-zip>yauzl: 3.4.0
   '@deepseek-ai/cosmokit': link:vendor/cosmokit
   '@deepseek-ai/schemastery': link:vendor/schemastery
+  zod: 4.6.7
 
 patchedDependencies:
   '@earendil-works/pi-ai@0.87.1': b9bcce474fb2ac44633dff0fa722816a5bff5451b4575d5874035ea14ba70a4f
@@ -1049,7 +1050,7 @@ importers:
   packages/api/account-controller:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1111,7 +1112,7 @@ importers:
         specifier: ^8.18.1
         version: 8.18.1
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/api/job-controller:
@@ -1123,7 +1124,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1275,7 +1276,7 @@ importers:
         specifier: workspace:*
         version: link:../../interaction/user-questions
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/api/session-controller:
@@ -1293,7 +1294,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1429,7 +1430,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1475,7 +1476,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1533,7 +1534,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1582,7 +1583,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -1824,7 +1825,7 @@ importers:
         specifier: ^2.9.0
         version: 2.9.1
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -2794,7 +2795,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -2831,7 +2832,7 @@ importers:
         specifier: workspace:*
         version: link:../../typert/protocol
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -2960,7 +2961,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -3579,7 +3580,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/client/ui-deliverables:
@@ -4324,7 +4325,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -5605,7 +5606,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/client/ui-sidebar-terminal:
@@ -6610,7 +6611,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -6686,7 +6687,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -6744,7 +6745,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -6842,7 +6843,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7095,7 +7096,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7209,7 +7210,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7240,7 +7241,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7314,7 +7315,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7592,7 +7593,7 @@ importers:
         specifier: 3.2.2
         version: 3.2.2(yauzl@3.4.0)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7822,7 +7823,7 @@ importers:
         specifier: 0.28.0
         version: 0.28.0
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -7989,7 +7990,7 @@ importers:
         specifier: 1.13.8
         version: 1.13.8
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -8258,7 +8259,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -8370,7 +8371,7 @@ importers:
   packages/feedback/command-feedback:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -8410,7 +8411,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -8727,7 +8728,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9133,7 +9134,7 @@ importers:
   packages/host/plugin-inventory:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9229,7 +9230,7 @@ importers:
         specifier: workspace:*
         version: link:../../util/crypto
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9266,7 +9267,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9365,7 +9366,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9515,7 +9516,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9741,7 +9742,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -9848,7 +9849,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -10032,7 +10033,7 @@ importers:
         specifier: ^2026.7.4
         version: 2026.8.31(zod@4.6.7)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/mcp/mcp-resources:
@@ -10069,7 +10070,7 @@ importers:
         specifier: workspace:*
         version: link:../../util/brand
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -10155,7 +10156,7 @@ importers:
         specifier: ^4.2.0
         version: 4.3.2
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -10356,7 +10357,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -10430,7 +10431,7 @@ importers:
         specifier: 0.5.1
         version: 0.5.1
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -11031,7 +11032,7 @@ importers:
   packages/session/session-projection:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -11050,7 +11051,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -11075,7 +11076,7 @@ importers:
   packages/session/session-stats:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -11185,7 +11186,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -11312,7 +11313,7 @@ importers:
   packages/session/session-turn-outline:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12039,7 +12040,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12064,7 +12065,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12083,7 +12084,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12144,7 +12145,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12172,7 +12173,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12226,7 +12227,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12381,7 +12382,7 @@ importers:
         specifier: ^1.29.0
         version: 1.32.1(zod@4.6.7)
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -12741,7 +12742,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -13356,7 +13357,7 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -13418,7 +13419,7 @@ importers:
         specifier: workspace:*
         version: link:../registry
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/typert/loader:
@@ -13440,7 +13441,7 @@ importers:
         specifier: workspace:*
         version: link:../registry
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
 
   packages/typert/protocol:
@@ -13456,7 +13457,7 @@ importers:
   packages/typert/registry:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -13481,7 +13482,7 @@ importers:
   packages/util/chunked-list:
     dependencies:
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -14046,7 +14047,7 @@ importers:
         specifier: workspace:*
         version: link:../../util/brand
       zod:
-        specifier: ^4.4.3
+        specifier: 4.6.7
         version: 4.6.7
     devDependencies:
       '@deepseek-ai/cordis':
@@ -14679,7 +14680,7 @@ packages:
   '@agentclientprotocol/sdk@1.4.0':
     resolution: {integrity: sha512-/eufudw+aFY1LKLolT6yFE6UMmYRl7fMJ/DEONSIyR6wI3slHWITBsANRGqXEY8FRzqUxwh7QEaGiZHcJPVThg==}
     peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
+      zod: 4.6.7
 
   '@algolia/abtesting@1.26.0':
     resolution: {integrity: sha512-h6ff/as504npvSqhLlh1qw3B8lFktXgr6AOL5vkP4WCLU1oH+VCBh2K4x4Kvewnwr7kchH6HgLm3CcS8ZAYi8A==}
@@ -14810,13 +14811,13 @@ packages:
     peerDependencies:
       '@anthropic-ai/sdk': '>=0.93.0'
       '@modelcontextprotocol/sdk': ^1.29.0
-      zod: ^4.0.0
+      zod: 4.6.7
 
   '@anthropic-ai/sdk@0.124.0':
     resolution: {integrity: sha512-cN5O8i9UVxHeOQAzj/XjshWXG8KiibJDw9OGpH2Z/eR3n/RBxdoLxDJOcfqAJWvjaMDFfHTBADU04hWRJVkDyA==}
     hasBin: true
     peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
+      zod: 4.6.7
     peerDependenciesMeta:
       zod:
         optional: true
@@ -14825,7 +14826,7 @@ packages:
     resolution: {integrity: sha512-q9vaSZQVFx6B/gPxetGYfLXSJD5v0sOmh0OpZDq7yCrTSA+Rscvrtyol7JJTW40wEpQB4U1B4JXzxQitbQ3CAA==}
     hasBin: true
     peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
+      zod: 4.6.7
     peerDependenciesMeta:
       zod:
         optional: true
@@ -16161,7 +16162,7 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@cfworker/json-schema': ^4.1.1
-      zod: ^3.25 || ^4.0
+      zod: 4.6.7
     peerDependenciesMeta:
       '@cfworker/json-schema':
         optional: true
@@ -20567,7 +20568,7 @@ packages:
     resolution: {integrity: sha512-MWtTjd/gQt4jpbji61NTgFWJLoY/PdRJ6wG9/ZDRMYNMlBKrCrSlkLI+KgHP1vR1qT6LKSAyAqIxno6lcK9JiA==}
     peerDependencies:
       ws: ^8.18.0
-      zod: ^3.25 || ^4.0
+      zod: 4.6.7
     peerDependenciesMeta:
       ws:
         optional: true
@@ -22161,10 +22162,7 @@ packages:
   zod-to-json-schema@3.25.2:
     resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
     peerDependencies:
-      zod: ^3.25.28 || ^4
-
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+      zod: 4.6.7
 
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
@@ -22706,7 +22704,7 @@ snapshots:
       '@browserbasehq/sdk': 2.21.0
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 2.9.0(@opentelemetry/api@1.9.1)
-      zod: 4.4.3
+      zod: 4.6.7
     transitivePeerDependencies:
       - encoding
 
@@ -30156,8 +30154,6 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@4.6.7):
     dependencies:
       zod: 4.6.7
-
-  zod@4.4.3: {}
 
   zod@4.6.7: {}
 

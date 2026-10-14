@@ -18,6 +18,10 @@ overrides:
   'extract-zip>yauzl': '3.4.0'
   '@deepseek-ai/cosmokit': 'link:vendor/cosmokit'
   '@deepseek-ai/schemastery': 'link:vendor/schemastery'
+  # 2026-10-14: pin zod to 4.6.7 so all consumers (including @browserbasehq/stagehand
+  # which would otherwise hoist 4.4.3) see one type graph; native.ts:151's
+  # `z.fromJSONSchema(...)` is then assignable to stagehand.extract's parameter.
+  'zod': '4.6.7'
 
 peerDependencyRules:
   allowedVersions:
