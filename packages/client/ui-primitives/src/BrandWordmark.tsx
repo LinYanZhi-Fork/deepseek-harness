@@ -1,5 +1,7 @@
 import type { IconProps } from './icons/props.ts'
 
+import type { JSX } from 'react'
+
 /** Display options for the official brand wordmark. */
 export interface BrandWordmarkProps extends IconProps {
   /** Whether to include the leading whale mark; defaults to true. */
@@ -13,7 +15,7 @@ export interface BrandWordmarkProps extends IconProps {
  * @param props.includeMark - whether to include the leading whale mark.
  * @returns the wordmark svg (aria-hidden decorative brand art).
  */
-export function BrandWordmark({ size = 24, className, includeMark = true }: BrandWordmarkProps) {
+export function BrandWordmark({ size = 24, className, includeMark = true }: BrandWordmarkProps): JSX.Element {
   const width = includeMark ? 182 : 156
   return (
     <svg

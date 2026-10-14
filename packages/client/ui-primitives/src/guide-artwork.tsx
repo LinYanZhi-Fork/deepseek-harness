@@ -1,12 +1,13 @@
 /** Fixed-palette artwork for sidebar guide entries. */
 import type { IconProps } from './icons/props.ts'
+import type { JSX } from 'react'
 
 /**
  * Render fixed-palette artwork for a sidebar guide entry.
  * @param props - canvas size and layout class supplied by the guide.
  * @returns an ornamental SVG hidden from assistive technology.
  */
-export function GuideArtworkBrowser({ size = 36, className }: IconProps) {
+export function GuideArtworkBrowser({ size = 36, className }: IconProps): JSX.Element {
   return (
     <svg width={size} height={size} className={className} aria-hidden="true" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.9995 28.1465C23.6034 28.1465 28.1461 23.6038 28.1461 18C28.1461 12.3963 23.6034 7.85352 17.9995 7.85352C12.3958 7.85352 7.85303 12.3963 7.85303 18C7.85303 23.6038 12.3958 28.1465 17.9995 28.1465Z" stroke="#539CFA" strokeWidth="2" />
@@ -22,7 +23,7 @@ export function GuideArtworkBrowser({ size = 36, className }: IconProps) {
  * @param props - canvas size and layout class supplied by the guide.
  * @returns an ornamental SVG hidden from assistive technology.
  */
-export function GuideArtworkFiles({ size = 36, className }: IconProps) {
+export function GuideArtworkFiles({ size = 36, className }: IconProps): JSX.Element {
   return (
     <svg width={size} height={size} className={className} aria-hidden="true" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M10.7603 27.922H24.6817C26.3441 27.922 27.1753 27.922 27.8102 27.5984C28.3687 27.3139 28.8228 26.8598 29.1074 26.3012C29.4309 25.6663 29.4309 24.8351 29.4309 23.1727V15.4936" stroke="#FFCD78" strokeWidth="1.97886" />

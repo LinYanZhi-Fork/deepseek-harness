@@ -3,6 +3,7 @@
 
 import clsx from 'clsx'
 import css from './Switch.module.css'
+import type { JSX } from 'react'
 
 /**
  * Render a toggle switch.
@@ -24,7 +25,7 @@ export function Switch({ checked, onChange, label, disabled = false, title, clas
   // `| undefined` so a caller can forward an optional class straight through
   // under exactOptionalPropertyTypes (a CSS-module lookup is string|undefined).
   className?: string | undefined
-}) {
+}): JSX.Element {
   return (
     <button
       type="button"
