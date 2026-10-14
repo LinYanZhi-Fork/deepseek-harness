@@ -15,6 +15,7 @@
         var COLOURS = { '3080': 'red', '3081': 'green' };
         var colour = COLOURS[location.port];
         if (colour === undefined) return;
+        document.documentElement.style.setProperty('--dsh-brand-color', colour);
         var dark = document.getElementById('brand-favicon-dark');
         var light = document.getElementById('brand-favicon-light');
         if (dark !== null) dark.href = '/brand/' + colour + '-dark.svg';
