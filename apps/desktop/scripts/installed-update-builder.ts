@@ -1,9 +1,22 @@
 /** Select isolated qualification inputs without weakening the ordinary Windows installer or signing hooks. */
 import { join } from 'node:path'
-import { createElectronBuilderConfig } from './electron-builder-config.mjs'
+import { createElectronBuilderConfig, type DesktopElectronBuilderConfig } from './electron-builder-config.mjs'
 import { readInstalledUpdateRun } from './installed-update-qualification.ts'
 import { verifyInstalledUpdateApplication } from './prepare-installed-update-application.ts'
 import { verifyDesktopRuntime } from '../src/runtime-tree.ts'
+
+/**
+ * Builder configuration this qualification run returns: the release configuration with the run's
+ * own private runtime, installer output, identity, and update feed. The release declaration types
+ * `files` and `extraMetadata` as the ordinary release values, so the qualification overrides are
+ * restated here to keep the concrete fields callers and the packaging spec read.
+ */
+type InstalledUpdateBuilderConfig = Omit<DesktopElectronBuilderConfig, 'extraMetadata' | 'files' | 'publish'> & {
+  productName: string
+  extraMetadata: DesktopElectronBuilderConfig['extraMetadata'] & { name: string; version: string; main: string }
+  files: (string | { from: string; to: string; filter: string[] })[]
+  publish: { provider: 'generic'; url: string; channel: string }[]
+}
 
 /**
  * Validate one version and construct its signed-only, test-only builder configuration.
@@ -12,7 +25,9 @@ import { verifyDesktopRuntime } from '../src/runtime-tree.ts'
  * @param environment File-owned .env.windows settings loaded by a supervised caller; never logged here.
  * @returns Configuration only. Calling builder hooks requires separate hardware authorization and supervision.
  */
-export async function createInstalledUpdateBuilderConfig(manifest: string, version: string, environment: NodeJS.ProcessEnv) {
+export async function createInstalledUpdateBuilderConfig(
+  manifest: string, version: string, environment: NodeJS.ProcessEnv,
+): Promise<InstalledUpdateBuilderConfig> {
   const run = await readInstalledUpdateRun(manifest)
   if (!run.versions.includes(version)) throw new Error('installed update: package version is outside the qualification run')
   if (environment.DSH_DESKTOP_AUTO_UPDATE_ENV !== 'test' || environment.DSH_DESKTOP_UNSIGNED === '1'

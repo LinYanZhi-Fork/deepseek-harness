@@ -19,7 +19,7 @@ type QuestionToolRowProps = Pick<ToolRowProps,
  */
 export function QuestionToolRow({
   useDisclosure, t, summary, bodyRaw, output, askQuestion, state, inspect, openPanel, panelLabel,
-}: QuestionToolRowProps) {
+}: QuestionToolRowProps): JSX.Element {
   const { expanded, toggle } = useDisclosure()
   const expandable = bodyRaw != null || output != null || askQuestion != null
   const open = expanded && expandable

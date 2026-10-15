@@ -3,6 +3,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import type { HostObservable, InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { PlatformPageClaim } from './platform-pages.ts'
 import { PlatformOverlay, type PlatformBridge } from './PlatformOverlay.tsx'
+import type { ReactNode } from 'react'
 
 /** Injected share of the shared Platform host. */
 export interface AccountPlatformHostInjected {
@@ -24,7 +25,7 @@ export type AccountPlatformHostProps =
  * @param props - the native commands, the live page request, and its dismissal.
  * @returns the native Platform container, or null while no page is requested.
  */
-export function AccountPlatformHost({ platform, usePage, closePage, t }: AccountPlatformHostProps) {
+export function AccountPlatformHost({ platform, usePage, closePage, t }: AccountPlatformHostProps): ReactNode {
   const claim = usePage(current => current)
   if (claim === null) return null
   return <PlatformOverlay bridge={platform} page={claim.page} backLabel={t('backToHarness')}

@@ -17,7 +17,7 @@ export function OnboardingConfirmation({ kind, t, busy, canRecharge, onClose, on
     onContinue: () => void
     onRecharge: () => void
     onSkip: () => void
-  }) {
+  }): JSX.Element {
   const credit = kind !== 'skip'
   const title = t(credit ? 'onboardingNoCreditTitle' : 'onboardingSkipTitle')
   return <Modal open headless backdropBlur={false} title={title} onClose={onClose}>

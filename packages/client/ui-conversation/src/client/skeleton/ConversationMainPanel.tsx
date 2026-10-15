@@ -10,7 +10,7 @@ const CONTENT_SLOTS = { widthControls: ConversationWidthControls }
  * @param props - the original `main.conversation` Slot props.
  * @returns the unchanged root, Header, content, and width-control subtree.
  */
-export function ConversationMainPanel(props: ConversationSlotProps) {
+export function ConversationMainPanel(props: ConversationSlotProps): JSX.Element {
   const { sessionId, useSession, useSessions, useConversation, renderSlot, renderFactorySlot } = props
   const session = useSession(s => s)
   const conversation = useConversation(s => s)

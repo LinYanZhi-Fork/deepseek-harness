@@ -5,6 +5,7 @@ import { SettingsForm, SettingsValueField } from '@deepseek-ai/dsh-client-ui-pri
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import { formLabels } from './locales.ts'
 import type { AgentLoopCardFace } from './agent-loop-card-controller.ts'
+import type { ReactNode } from 'react'
 
 /** Props the renderer binds for the agent-loop page. */
 export type AgentLoopCardProps =
@@ -17,7 +18,7 @@ export type AgentLoopCardProps =
  * @param props - the view asked for, locale copy, the form snapshot, and its actions.
  * @returns the one-liner, or the form.
  */
-export function AgentLoopCard(props: AgentLoopCardProps) {
+export function AgentLoopCard(props: AgentLoopCardProps): ReactNode {
   const { t } = props
   const state = props.useAgentLoopCard(snapshot => snapshot)
   if (props.view === 'summary') return t('description')

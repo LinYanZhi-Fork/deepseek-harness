@@ -67,7 +67,7 @@ export function TrajectoryCell({
   selected = false,
   className,
   ...rest
-}: TrajectoryCellProps & { t: TrajectoryTranslate }) {
+}: TrajectoryCellProps & { t: TrajectoryTranslate }): JSX.Element {
   const rootClass = [
     css.root,
     selected ? css.selected : undefined,

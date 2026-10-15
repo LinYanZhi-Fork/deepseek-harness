@@ -13,7 +13,7 @@ import { CordisPreparingRow } from './CordisPreparingRow.tsx'
 export type CordisActionRowProps = ToolCallViewProps & PropsLocale<'cordis'>
 
 /** Render one Stop or Remove call with Cordis-owned localized copy. */
-export function CordisActionRow(props: CordisActionRowProps) {
+export function CordisActionRow(props: CordisActionRowProps): JSX.Element {
   if (props.phase === 'preparing') {
     const remove = props.toolName === 'cordis_undefine'
     return <CordisPreparingRow {...props}

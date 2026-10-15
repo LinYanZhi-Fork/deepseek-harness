@@ -5,6 +5,7 @@
 import { IconWarningOutlineRegular, Toast } from '@deepseek-ai/dsh-client-ui-primitives'
 import { assertNever } from '@deepseek-ai/dsh-util-values'
 import type { RowToastProps, RowToastState } from '../contract/slots.ts'
+import type { ReactNode } from 'react'
 
 /**
  * Hold for the notices that take longer to read than a one-line warning: the
@@ -22,7 +23,7 @@ const LONG_TOAST_HOLD_MS = 6000
  * @param props - the notice hook, the shared viewing store, the notice dismissal, the two archived-notice actions, and the locale seat.
  * @returns the notice on display, or null.
  */
-export function RowActionToast({ useToast, useStore, dismissToast, undoArchive, showArchived, t }: RowToastProps) {
+export function RowActionToast({ useToast, useStore, dismissToast, undoArchive, showArchived, t }: RowToastProps): ReactNode {
   const toast = useToast(current => current)
   const archivedRowsVisible = useStore(state => (state.archivedFilter ?? 'default') !== 'default')
   if (toast === null) return null

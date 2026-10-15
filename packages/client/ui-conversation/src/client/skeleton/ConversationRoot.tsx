@@ -8,6 +8,6 @@ import { ConversationMainPanel } from './ConversationMainPanel.tsx'
 /** Full props composed from the slot contract. */
 export type ConversationRootProps = ConversationSlotProps
 
-export function ConversationRoot(props: ConversationRootProps) {
+export function ConversationRoot(props: ConversationRootProps): JSX.Element {
   return <ConversationMainPanel {...props} />
 }

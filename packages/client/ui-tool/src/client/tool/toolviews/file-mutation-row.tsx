@@ -14,7 +14,7 @@ const FILE_MUTATION_ICON = <IconEditOutlineRegular size={14} />
 /**
  * Lets users expand an applied file diff and open the reported path.
  */
-export function FileMutationRow(props: FileMutationRowProps) {
+export function FileMutationRow(props: FileMutationRowProps): JSX.Element {
   return props.phase === 'preparing'
     ? <PreparingFileMutationRow {...props} />
     : <StartedFileMutationRow {...props} />

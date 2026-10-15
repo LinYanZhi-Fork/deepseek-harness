@@ -47,7 +47,7 @@ export function TrajectoryToolbar({
   searchQuery,
   onSearchQueryChange,
   t,
-}: TrajectoryToolbarProps) {
+}: TrajectoryToolbarProps): JSX.Element {
   return (
     <div className={css.root} role="toolbar" aria-label={t('toolbar.aria')}>
       <div className={css.inner}>

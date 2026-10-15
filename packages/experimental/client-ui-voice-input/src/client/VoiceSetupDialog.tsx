@@ -13,7 +13,7 @@ type VoiceSetupDialogProps = PropsLocale<typeof NS>
  * @param props - visibility, installation need and navigation callbacks.
  * @returns a dismissible prompt that never starts preparation or recording.
  */
-export function VoiceSetupDialog({ open, needsInstallation, onDismiss, onOpenDetails, t }: VoiceSetupDialogProps) {
+export function VoiceSetupDialog({ open, needsInstallation, onDismiss, onOpenDetails, t }: VoiceSetupDialogProps): JSX.Element {
   return <Modal open={open} title={t(needsInstallation ? 'setupPrompt.title' : 'setupPrompt.unavailableTitle')}
     closeLabel={t('cancel')} onClose={onDismiss}
     footer={<>

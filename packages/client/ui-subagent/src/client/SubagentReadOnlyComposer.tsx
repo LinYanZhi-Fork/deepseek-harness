@@ -18,7 +18,7 @@ export type SubagentReadOnlyComposerProps =
  */
 export function SubagentReadOnlyComposer({
   matched, t,
-}: Pick<SubagentReadOnlyComposerProps, 'matched' | 't'>) {
+}: Pick<SubagentReadOnlyComposerProps, 'matched' | 't'>): JSX.Element {
   const oneShot = matched.reason === 'one-shot'
   return (
     <div className={css.frame} role="status">

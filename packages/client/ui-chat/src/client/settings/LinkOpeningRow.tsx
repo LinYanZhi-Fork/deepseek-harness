@@ -3,6 +3,7 @@ import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { LinkOpening } from '../../chat-settings.ts'
 import { PreferenceRow } from './PreferenceRow.tsx'
+import type { ReactNode } from 'react'
 
 /** Registration-side link-opening preference. */
 export interface LinkOpeningRowInjected {
@@ -27,7 +28,7 @@ export type LinkOpeningRowProps =
  * @param props - Composed Settings slot props.
  * @returns The preference row.
  */
-export function LinkOpeningRow({ useLinkOpening, useBrowserAvailable, setLinkOpening, t }: LinkOpeningRowProps) {
+export function LinkOpeningRow({ useLinkOpening, useBrowserAvailable, setLinkOpening, t }: LinkOpeningRowProps): ReactNode {
   const destination = useLinkOpening(value => value)
   const browserAvailable = useBrowserAvailable(value => value)
   if (!browserAvailable) return null

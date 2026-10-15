@@ -11,6 +11,6 @@ import type {} from '@deepseek-ai/dsh-client-ui-sidebar/client'
  * @param props - the sidebar's icon share: the requested edge and whether the panel is selected.
  * @returns decorative clock icon.
  */
-export function TaskManagerIcon({ size }: PropsRuntime<'sidebar.panellist'>) {
+export function TaskManagerIcon({ size }: PropsRuntime<'sidebar.panellist'>): JSX.Element {
   return <IconClockOutlineRegular size={size} />
 }

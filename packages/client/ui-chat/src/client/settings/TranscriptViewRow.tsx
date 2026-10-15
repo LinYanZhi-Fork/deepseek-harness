@@ -34,7 +34,7 @@ const LABELS = {
  * @param props - composed Settings slot props.
  * @returns the preference row.
  */
-export function TranscriptViewRow({ useTranscriptView, setTranscriptView, t }: TranscriptViewRowProps) {
+export function TranscriptViewRow({ useTranscriptView, setTranscriptView, t }: TranscriptViewRowProps): JSX.Element {
   const mode = useTranscriptView(value => value)
   return (
     <PreferenceRow

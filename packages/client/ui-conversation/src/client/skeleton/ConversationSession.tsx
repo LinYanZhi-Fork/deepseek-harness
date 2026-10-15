@@ -58,7 +58,7 @@ function equalBreadcrumbs(left: readonly Breadcrumb[], right: readonly Breadcrum
 export function ConversationSessionHeader({
   sessionId, hideChrome, useSessions, useConversationViews, useStore,
   renderSlot, open, selectView, t,
-}: ConversationSessionHeaderProps) {
+}: ConversationSessionHeaderProps): JSX.Element {
   const tabs = useConversationViews(value => value)
   const selectedId = useStore(s => s.view)
   const active = resolveActiveView(tabs, selectedId)
@@ -165,6 +165,6 @@ export function ConversationSessionHeader({
  * @param props - Strict Session input/store, view ledger, and render shares.
  * @returns the active view area, or null while the Session remains blank.
  */
-export function ConversationSession(props: ConversationSessionProps) {
+export function ConversationSession(props: ConversationSessionProps): JSX.Element {
   return <DefaultConversationViews {...props} />
 }

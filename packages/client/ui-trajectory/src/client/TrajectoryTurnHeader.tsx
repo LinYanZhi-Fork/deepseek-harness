@@ -19,7 +19,7 @@ export interface TrajectoryTurnHeaderProps {
  * @param props.turn - turn index.
  * @returns the sticky header element.
  */
-export function TrajectoryTurnHeader({ turn, t }: TrajectoryTurnHeaderProps) {
+export function TrajectoryTurnHeader({ turn, t }: TrajectoryTurnHeaderProps): JSX.Element {
   return (
     <div className={css.root}>
       <div className={css.inner}>

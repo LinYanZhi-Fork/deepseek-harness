@@ -5,6 +5,7 @@ import { SettingsForm, SettingsValueField } from '@deepseek-ai/dsh-client-ui-pri
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import { formLabels } from './locales.ts'
 import type { ShellCardFace } from './shell-card-controller.ts'
+import type { ReactNode } from 'react'
 
 /** Props the renderer binds for the shell page. */
 export type ShellCardProps =
@@ -17,7 +18,7 @@ export type ShellCardProps =
  * @param props - the view asked for, locale copy, the form snapshot, and its actions.
  * @returns the one-liner, or the form.
  */
-export function ShellCard(props: ShellCardProps) {
+export function ShellCard(props: ShellCardProps): ReactNode {
   const { t } = props
   const state = props.useShellCard(snapshot => snapshot)
   if (props.view === 'summary') return t('description')

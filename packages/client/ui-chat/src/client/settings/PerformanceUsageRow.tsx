@@ -28,7 +28,7 @@ const OPTIONS: readonly { id: PerformanceUsageMode; label: ChatKey }[] = [
  * @param props - composed Settings slot props.
  * @returns the preference row.
  */
-export function PerformanceUsageRow({ usePerformanceUsage, setPerformanceUsage, t }: PerformanceUsageRowProps) {
+export function PerformanceUsageRow({ usePerformanceUsage, setPerformanceUsage, t }: PerformanceUsageRowProps): JSX.Element {
   const mode = usePerformanceUsage(value => value)
   const selectedLabel = mode === 'detailed'
     ? 'settings.performance.detailed'

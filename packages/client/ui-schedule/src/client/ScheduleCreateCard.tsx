@@ -43,7 +43,7 @@ export type ScheduleCreateCardInput = Pick<ScheduleCreateCardProps,
  * @param props - the settled card payload, injected task navigation, and copy.
  * @returns the created task's transcript card.
  */
-export function ScheduleCreateCard({ block, toolName, openTaskDetail, t, currentTask }: ScheduleCreateCardInput) {
+export function ScheduleCreateCard({ block, toolName, openTaskDetail, t, currentTask }: ScheduleCreateCardInput): JSX.Element {
   const model = scheduleCreateCardModel(block, toolName)
   const task = currentTask ?? model.task
   const deleted = currentTask === null

@@ -19,6 +19,7 @@ import {
 } from './session-schedule-state.ts'
 import { NS } from './locales.ts'
 import css from './SessionScheduleMark.module.css'
+import type { ReactNode } from 'react'
 
 /** Injected share of the Session-row clock mark: the shared Host task catalog. */
 export interface SessionScheduleMarkInjected {
@@ -39,7 +40,7 @@ export type SessionScheduleMarkProps =
  */
 export function SessionScheduleMark({
   sessionId, useCatalog, t,
-}: SessionScheduleMarkProps) {
+}: SessionScheduleMarkProps): ReactNode {
   const facts = useSessionScheduleFacts(useCatalog, sessionId)
   if (!facts.hasActive) return null
   return (

@@ -8,7 +8,7 @@ import css from './AskQuestionCard.module.css'
  * @param props - Localized transcript card data.
  * @returns the readable answered or unanswered question list.
  */
-export function AskQuestionCard({ card }: { card: AskQuestionCardModel }) {
+export function AskQuestionCard({ card }: { card: AskQuestionCardModel }): JSX.Element {
   if (card.kind === 'unanswered') {
     return (
       <div className={css.card}>

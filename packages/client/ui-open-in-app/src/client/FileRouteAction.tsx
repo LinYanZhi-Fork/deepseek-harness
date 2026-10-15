@@ -6,6 +6,7 @@ import type { SessionWorkspacePathApplication } from '@deepseek-ai/dsh-api-sessi
 import { useFileApplications } from './file-applications.ts'
 import { OpenTargetButton } from './OpenTargetButton.tsx'
 import type { NS } from './locales.ts'
+import type { ReactNode } from 'react'
 
 async function queryRoute(url: string, signal: AbortSignal): Promise<readonly SessionWorkspacePathApplication[] | null> {
   try {
@@ -25,7 +26,7 @@ async function queryRoute(url: string, signal: AbortSignal): Promise<readonly Se
  */
 export function FileRouteAction(
   props: Pick<PropsRuntime<'deliverables.file.actions'>, 'actionUrl' | 'available' | 'pending' | 'onAction'> & PropsLocale<typeof NS>,
-) {
+): ReactNode {
   const association = useFileApplications(props.actionUrl, queryRoute, props.available)
   if (!props.available) return null
   return <OpenTargetButton key={props.actionUrl} kind="file" applications={association.apps}

@@ -13,6 +13,7 @@ import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import type { SubagentAddress } from '@deepseek-ai/dsh-subagent/client'
 import type { NS } from '../locales.ts'
 import css from './SidebarChat.module.css'
+import type { ReactNode } from 'react'
 
 /** Stable implementation identity for the Sidebar tab body. */
 export const SUBAGENT_CHAT_ID = '@deepseek-ai/dsh-client-ui-subagent'
@@ -118,7 +119,7 @@ function subagentChatResourceProvider(sessions: ISessions): ResourceProvider<'su
 }
 
 /** Fixed Chat selection used by an embedded Conversation occurrence. */
-export function FixedChatConversationView(props: ConversationViewsProps) {
+export function FixedChatConversationView(props: ConversationViewsProps): JSX.Element {
   return <>{props.renderSlot('conversation.session', { view: 'chat' })}</>
 }
 
@@ -128,7 +129,7 @@ export type ConversationSlotPanelProps = PropsRuntime<'sidebar.chat.conversation
 /** Render the shared Conversation content for one explicitly provided child Session. */
 export function ConversationSlotPanel({
   sessionId, useSession, useConversation, useSessions, renderFactorySlot,
-}: ConversationSlotPanelProps) {
+}: ConversationSlotPanelProps): ReactNode {
   const session = useSession(value => value)
   const conversation = useConversation(value => value)
   const active = conversation.activeTargets.size > 0
@@ -152,7 +153,7 @@ export type SidebarChatTabProps =
   PropsRuntime<'sidebar.right.pane.tab'> & PropsRenderSlots<'sidebar.chat.conversation'>
 
 /** Bind a chat resource's child reference around its Conversation slot. */
-export function SidebarChatTab({ useResource, useTabInfo, SessionProvider, renderSlot }: SidebarChatTabProps) {
+export function SidebarChatTab({ useResource, useTabInfo, SessionProvider, renderSlot }: SidebarChatTabProps): JSX.Element {
   const { tab } = useTabInfo()
   const resource = useResource<'subagentchat'>(tab.contentId)
   return (

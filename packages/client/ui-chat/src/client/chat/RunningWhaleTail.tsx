@@ -7,7 +7,7 @@ const REST_PATH = 'M8.844 13.742C8.967 12.328 8.45 10.4 8.45 9.65C8.45 8.94 8.88
  * Render the decorative running icon; the APNG asset owns its animation timing.
  * @returns mask and static SVG selected by browser capabilities and accessibility preferences.
  */
-export function RunningWhaleTail() {
+export function RunningWhaleTail(): JSX.Element {
   return (
     <span className={css.runningIcon} aria-hidden="true">
       <span className={css.runningWhaleAnimated} />

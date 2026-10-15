@@ -6,7 +6,7 @@ import type { SidebarBrandMarkOwnerProps } from '@deepseek-ai/dsh-client-ui-side
  * @param props - Host-supplied mark presentation.
  * @returns the official whale mark.
  */
-export function OfficialBrandMark({ size }: SidebarBrandMarkOwnerProps) {
+export function OfficialBrandMark({ size }: SidebarBrandMarkOwnerProps): JSX.Element {
   return <FishLogo size={size} />
 }
 
@@ -14,6 +14,6 @@ export function OfficialBrandMark({ size }: SidebarBrandMarkOwnerProps) {
  * Render the official name artwork without its independently slotted mark.
  * @returns the official name wordmark.
  */
-export function OfficialBrandName() {
+export function OfficialBrandName(): JSX.Element {
   return <BrandWordmark includeMark={false} />
 }

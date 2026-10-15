@@ -39,7 +39,7 @@ const CUBES: readonly { id: ThemePreference; labelKey: ThemeKey; Icon: typeof Ic
  * @param props - composed slot props.
  * @returns the row element tree.
  */
-export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentProps) {
+export function AppearanceRow({ t, setTheme, useStore }: AppearanceRowComponentProps): JSX.Element {
   const preference = useStore(s => s.preference)
   return (
     <div className={css.group}>

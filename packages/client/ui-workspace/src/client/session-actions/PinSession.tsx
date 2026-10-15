@@ -11,6 +11,7 @@ import {
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { PinSessionInjected, SessionMenuItemProps, SessionRowActionProps } from '../contract/slots.ts'
 import css from '../rows/Rows.module.css'
+import type { ReactNode } from 'react'
 
 type PinState = Pick<SessionMenuItemProps<PinSessionInjected>, 'sessionId' | 'usePinned' | 'useArchived'>
 
@@ -27,7 +28,7 @@ function usePinState({ sessionId, usePinned, useArchived }: PinState) {
  * @param props - owner share, the pin share, and the menu open state.
  * @returns the row, or null for an archived Session.
  */
-export function PinSessionMenuItem(props: SessionMenuItemProps<PinSessionInjected>) {
+export function PinSessionMenuItem(props: SessionMenuItemProps<PinSessionInjected>): ReactNode {
   const { sessionId, useMenuOpenState, pinSession, unpinSession, t } = props
   const [, setMenuOpen] = useMenuOpenState()
   const { pinned, archived } = usePinState(props)
@@ -50,7 +51,7 @@ export function PinSessionMenuItem(props: SessionMenuItemProps<PinSessionInjecte
  * @param props - owner share and the pin share.
  * @returns the button, or null for an archived Session.
  */
-export function PinSessionRowButton(props: SessionRowActionProps<PinSessionInjected>) {
+export function PinSessionRowButton(props: SessionRowActionProps<PinSessionInjected>): ReactNode {
   const { sessionId, pinSession, unpinSession, t } = props
   const { pinned, archived } = usePinState(props)
   if (archived) return null

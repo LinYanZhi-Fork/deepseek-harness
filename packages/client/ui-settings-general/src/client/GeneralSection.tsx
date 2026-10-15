@@ -11,7 +11,7 @@ export type GeneralSectionComponentProps =
  * @param props - composed slot props (contract/slots.ts).
  * @returns the section element tree.
  */
-export function GeneralSection({ renderSlot }: GeneralSectionComponentProps) {
+export function GeneralSection({ renderSlot }: GeneralSectionComponentProps): JSX.Element {
   return (
     <div className={css.section}>
       {renderSlot('settings.general.item', {})}

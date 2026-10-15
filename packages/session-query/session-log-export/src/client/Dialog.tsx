@@ -24,7 +24,7 @@ export type SessionLogDownloadDialogProps =
  */
 export function SessionLogDownloadDialog({
   sessionId, useSessionLogDownload, dismiss, t,
-}: SessionLogDownloadDialogProps) {
+}: SessionLogDownloadDialogProps): JSX.Element {
   const entry = useSessionLogDownload(state => state.bySession[String(sessionId)])
 
   const status = entry?.status

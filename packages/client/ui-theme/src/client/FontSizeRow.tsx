@@ -32,7 +32,7 @@ export type FontSizeRowComponentProps =
  * @param props - composed slot props.
  * @returns the row element tree.
  */
-export function FontSizeRow({ t, setFontSize, useStore }: FontSizeRowComponentProps) {
+export function FontSizeRow({ t, setFontSize, useStore }: FontSizeRowComponentProps): JSX.Element {
   const fontSize = useStore(s => s.fontSize)
   return (
     <div className={css.row}>

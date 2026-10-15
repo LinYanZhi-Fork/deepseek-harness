@@ -19,7 +19,7 @@ export type SubagentModelSelectionFieldsProps = PropsLocale<'settings.subagent'>
  * @param props - locale copy, the card snapshot, and its toggle action.
  * @returns the model permission and route choices inside the shared card.
  */
-export function SubagentModelSelectionFields(props: SubagentModelSelectionFieldsProps) {
+export function SubagentModelSelectionFields(props: SubagentModelSelectionFieldsProps): JSX.Element {
   const { t, state } = props
   const availableGroups = new Map<string, {
     providerName: string

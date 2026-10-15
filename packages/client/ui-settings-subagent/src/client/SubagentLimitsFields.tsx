@@ -15,7 +15,7 @@ export type SubagentLimitsFieldsProps = PropsLocale<'settings.subagent'>
  * @param props - Locale, staged fields, and edit callbacks.
  * @returns Two responsive fields and their application rules.
  */
-export function SubagentLimitsFields(props: SubagentLimitsFieldsProps) {
+export function SubagentLimitsFields(props: SubagentLimitsFieldsProps): JSX.Element {
   const { t, state } = props
   return (
     <>

@@ -9,6 +9,7 @@ import { SettingsForm, SettingsSecretField, SettingsValueField } from '@deepseek
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import { formLabels } from './locales.ts'
 import type { WebSearchCardFace } from './web-search-card-controller.ts'
+import type { ReactNode } from 'react'
 
 /** Props the renderer binds for the web-search page. */
 export type WebSearchCardProps =
@@ -21,7 +22,7 @@ export type WebSearchCardProps =
  * @param props - the view asked for, locale copy, the form snapshot, and its actions.
  * @returns the one-liner, or the form.
  */
-export function WebSearchCard(props: WebSearchCardProps) {
+export function WebSearchCard(props: WebSearchCardProps): ReactNode {
   const { t } = props
   const state = props.useWebSearchCard(snapshot => snapshot)
   if (props.view === 'summary') return t('description')

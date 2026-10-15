@@ -29,7 +29,7 @@ export function FileCard({
   labels: FileCardLabels
   onRemove: () => void
   onRetry: () => void
-}) {
+}): JSX.Element {
   const extension = fileExtension(name).toUpperCase().slice(0, 8)
   const meta = state === 'uploading'
     ? labels.uploading

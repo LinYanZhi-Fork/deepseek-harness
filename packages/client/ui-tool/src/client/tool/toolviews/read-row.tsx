@@ -4,6 +4,7 @@ import type { ToolCallViewProps } from '../../contract/slots.ts'
 import { readCallLine, readCardModel } from '../models/read-card-model.ts'
 import { readFamilyRow } from './read-family-row.tsx'
 import { CONVERSATION_NS as NS } from '../../locale.ts'
+import type { ReactNode } from 'react'
 
 type ReadRowProps = ToolCallViewProps & PropsLocale<'conversation'>
 
@@ -11,7 +12,7 @@ type ReadRowProps = ToolCallViewProps & PropsLocale<'conversation'>
  * Lets users expand a completed read result and open its reported path at the
  * line the call started from.
  */
-export function ReadRow(props: ReadRowProps) {
+export function ReadRow(props: ReadRowProps): ReactNode {
   const { block, cwd, home } = props
   return readFamilyRow(props, {
     read: readCardModel(block, cwd, home),

@@ -19,7 +19,7 @@ export type HeaderContentProps = PropsRuntime<'settings.header'> & PropsLocale<'
  * @param props - composed slot props.
  * @returns the trigger content fragment.
  */
-export function TriggerContent({ wide, t }: TriggerContentProps) {
+export function TriggerContent({ wide, t }: TriggerContentProps): JSX.Element {
   return (
     <>
       <IconSettingsOutlineMedium size={wide ? 16 : 18} />
@@ -33,7 +33,7 @@ export function TriggerContent({ wide, t }: TriggerContentProps) {
  * @param props - composed slot props.
  * @returns the title text node.
  */
-export function HeaderContent({ t }: HeaderContentProps) {
+export function HeaderContent({ t }: HeaderContentProps): JSX.Element {
   return <>{t('title')}</>
 }
 
@@ -45,6 +45,6 @@ export type CloseLabelProps = PropsRuntime<'settings.close'> & PropsLocale<'sett
  * @param props - composed slot props.
  * @returns the label text node.
  */
-export function CloseLabel({ t }: CloseLabelProps) {
+export function CloseLabel({ t }: CloseLabelProps): JSX.Element {
   return <>{t('close')}</>
 }

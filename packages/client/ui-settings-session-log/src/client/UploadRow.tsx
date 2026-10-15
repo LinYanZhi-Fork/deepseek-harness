@@ -5,6 +5,7 @@ import type { ConfigFormSnapshot } from '@deepseek-ai/dsh-client-ui-settings/cli
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { UploadMutation, UploadSettings } from './upload-preference.ts'
 import css from './UploadRow.module.css'
+import type { ReactNode } from 'react'
 
 /** Accepted settings and mutation callbacks supplied by the plugin. */
 export interface UploadInjected {
@@ -23,7 +24,7 @@ type Face = InjectFace<UploadInjected> & PropsLocale<'settings.sessionLog'>
  * @param props - settings hooks, writer and localized copy.
  * @returns the bottom preference row.
  */
-export function UploadRow({ useUpload, useMutation, setEnabled, t }: PropsRuntime<'settings.general.item'> & Face) {
+export function UploadRow({ useUpload, useMutation, setEnabled, t }: PropsRuntime<'settings.general.item'> & Face): JSX.Element {
   const upload = useUpload(value => value)
   const busy = useMutation(value => value.busy)
   return <div className={css.row}>
@@ -42,7 +43,7 @@ export function UploadRow({ useUpload, useMutation, setEnabled, t }: PropsRuntim
  * @param props - mutation hook, dismissal and localized copy.
  * @returns the current toast, or nothing.
  */
-export function UploadToast({ useMutation, dismiss, t }: PropsRuntime<'shell.overlay'> & Face) {
+export function UploadToast({ useMutation, dismiss, t }: PropsRuntime<'shell.overlay'> & Face): ReactNode {
   const state = useMutation(value => value)
   if (state.notice === null) return null
   return <Toast key={state.sequence} text={t(state.notice)} onDone={dismiss}

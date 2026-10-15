@@ -10,7 +10,7 @@ interface CompactionCommandCardProps extends CommandRowOwnerProps {
 }
 
 /** Render one manual compaction lifecycle without duplicating its checkpoint marker. */
-export function CompactionCommandCard({ node, compaction, t }: CompactionCommandCardProps) {
+export function CompactionCommandCard({ node, compaction, t }: CompactionCommandCardProps): JSX.Element {
   if (compaction !== undefined) {
     return (
       <CompactionItem

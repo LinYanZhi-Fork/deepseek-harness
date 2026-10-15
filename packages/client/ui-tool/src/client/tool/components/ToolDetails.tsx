@@ -117,7 +117,7 @@ function DetailItem({ item, t, onOpenFile }: { item: ToolDetailItem } & DetailCo
 export function ToolDetails({ model, hasInspect = false, t, onOpenFile }: {
   model: ToolDetailsModel
   hasInspect?: boolean
-} & DetailContentProps) {
+} & DetailContentProps): JSX.Element {
   return (
     <div className={css.root} data-inspect={hasInspect || undefined} data-caption={model.caption !== undefined || undefined}>
       {model.caption !== undefined && <div className={css.caption}>{model.caption}</div>}

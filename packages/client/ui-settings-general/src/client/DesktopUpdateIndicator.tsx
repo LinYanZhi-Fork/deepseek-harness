@@ -4,6 +4,7 @@ import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-cli
 import css from './DesktopUpdateIndicator.module.css'
 import type { DesktopUpdateFailureKind, DesktopUpdatePresentation, DesktopUpdateView } from '../types.ts'
 import type { SettingsRootInjected } from './shell-contract.ts'
+import type { ReactNode } from 'react'
 
 type SettingsTranslate = PropsLocale<'settings'>['t']
 
@@ -59,7 +60,7 @@ export function DesktopUpdateIndicator({ wide, hidden, t, view, onOpen }: {
   t: SettingsTranslate
   view: DesktopUpdateView
   onOpen: () => void
-}) {
+}): ReactNode {
   const { presentation: state, failed, opening } = view
   if (!wide || hidden || (!failed && (state === undefined || state.phase === 'idle'))) return null
   const retryLabel = t('desktop.update.retry')
@@ -86,7 +87,7 @@ type BadgeProps = PropsRuntime<'sidebar.toggle.badge'> & PropsLocale<'settings'>
  * @param props - Framework-bound carrier and connection state.
  * @returns A non-interactive brand-blue notification on the sidebar expand button.
  */
-export function DesktopUpdateBadge({ useDesktopUpdate, useConnectionState, t }: BadgeProps) {
+export function DesktopUpdateBadge({ useDesktopUpdate, useConnectionState, t }: BadgeProps): ReactNode {
   const { presentation: state, failed } = useDesktopUpdate(value => value)
   const connection = useConnectionState(value => value)
   if (((connection === 'disconnected' || connection === 'connecting') && state?.phase !== 'installing')
