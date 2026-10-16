@@ -185,7 +185,7 @@ export function SidebarRoot({
         onClick={() => { toggleSidebar() }}
       >
         {!wide && !windowsTitlebar && (
-          <span className={css.railMark} aria-hidden="true">
+          <span className={css.railMark} style={{ color: 'var(--dsh-brand-color, currentColor)' }} aria-hidden="true">
             {renderSlot('sidebar.brand.mark', { size: 24 }, { fallback: <FishLogo size={24} /> })}
           </span>
         )}
@@ -221,7 +221,7 @@ export function SidebarRoot({
         {wide && (() => {
           const identity = (
             <span className={css.brandIdentity} aria-hidden="true">
-              <span className={css.brandMark}>
+              <span className={css.brandMark} style={{ color: 'var(--dsh-brand-color, currentColor)' }}>
                 {renderSlot('sidebar.brand.mark', { size: 24 }, { fallback: <FishLogo size={24} /> })}
               </span>
               <span className={css.brandName}>
