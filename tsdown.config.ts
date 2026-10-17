@@ -24,11 +24,7 @@ export default defineConfig(({ env }) => {
       : ['vendor/*', 'packages/*/*', 'apps/cli', 'apps/desktop-host'],
     entry: client
     ? ''
-    : [
-        'lib/types/index.js',
-        'lib/types/invariant.js',
-        'lib/types/startup.js',
-      ],
+    : ['lib/types/{index,invariant,startup}.js'],
     outDir: 'lib',
     format: ['esm'],
     platform: 'node',
